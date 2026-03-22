@@ -6,7 +6,7 @@ const About = () => {
           About Me
         </p>
 
-        <h1 className="text-4xl md:text-5xl font-bold mb-8 leading-tight font-serif">
+          <h1 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
           Building real-world products across <span className="text-zinc-400">hardware and software</span>.
         </h1>
 

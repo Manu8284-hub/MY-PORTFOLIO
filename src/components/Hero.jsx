@@ -6,9 +6,9 @@ const Hero = () => {
       <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[42rem] h-[42rem] bg-indigo-500/10 blur-3xl rounded-full pointer-events-none" />
       <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
         <p className="text-indigo-400 font-medium mb-4 tracking-wide uppercase text-sm">
-          SOFTWARE ENGINEER
+          SOFTWARE ENGINEER | VIDEO EDITOR 
         </p>
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight font-serif">
+        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
           Designing digital <br />
           experiences that <span className="text-zinc-500">matter.</span>
         </h1>
