@@ -1,52 +1,112 @@
+import { motion } from 'framer-motion';
+import { BookOpen, Code2, Lightbulb } from 'lucide-react';
+
 const About = () => {
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+  };
+
   return (
-    <section className="pt-28 pb-24 min-h-screen bg-zinc-900/50 px-6">
-      <div className="max-w-4xl mx-auto">
-        <p className="text-indigo-400 font-medium mb-4 tracking-wide uppercase text-sm">
-          About Me
-        </p>
-
-          <h1 className="text-4xl md:text-5xl font-bold mb-8 leading-tight">
-          Building real-world products across <span className="text-zinc-400">hardware and software</span>.
-        </h1>
-
-        <p className="text-zinc-300 text-lg leading-relaxed mb-8">
-          I am Manu Sharma, a developer focused on practical, user-centered solutions. My strongest project is a
-          Human-Following Suitcase using ESP32, ultrasonic sensors, and motor control logic. Alongside embedded systems,
-          I build modern web applications using HTML, CSS, JavaScript, React, and Vite.
-        </p>
-
-        <div className="mb-10">
-          <a
-            href="public/RESUME (2).pdf"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center bg-white text-black px-7 py-3 rounded-full font-semibold hover:bg-zinc-200 transition"
-          >
-            See My Resume
-          </a>
+    <section id="about" className="py-24 bg-white relative overflow-hidden">
+      <div className="absolute top-1/3 left-0 w-80 h-80 bg-blue-50 rounded-full blur-3xl pointer-events-none" />
+      
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        {/* Section Header */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-widest text-blue-600">
+              Who I Am
+            </span>
+            <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 mt-2">
+              About Me
+            </h2>
+          </div>
+          <div className="h-1 w-20 bg-blue-600 rounded-full hidden md:block mb-3" />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <article className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold mb-4">Core Skills</h2>
-            <ul className="list-disc list-inside text-zinc-300 space-y-2">
-              <li>Embedded systems and sensor integration</li>
-              <li>Motor driver and real-time control logic</li>
-              <li>Frontend development with React and responsive UI</li>
-              <li>Version control and project sharing with GitHub</li>
-            </ul>
-          </article>
+        {/* Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          {/* Paragraphs Column */}
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ staggerChildren: 0.15 }}
+            className="lg:col-span-7 space-y-6 text-slate-600 text-base sm:text-lg leading-relaxed text-left"
+          >
+            <motion.p variants={cardVariants} className="font-medium text-slate-800">
+              I am Manu Sharma, a B.E. Computer Science and Engineering student with a strong interest in software development and problem solving. I enjoy building modern web applications using the MERN stack and continuously improving my technical skills through projects, coding challenges, and hands-on learning.
+            </motion.p>
+            
+            <motion.p variants={cardVariants}>
+              My primary focus is on full-stack web development, where I work with technologies such as React.js, Node.js, Express.js, MongoDB, and PostgreSQL to create efficient and user-friendly applications. I am passionate about learning new technologies, solving real-world problems, and developing solutions that create meaningful impact.
+            </motion.p>
+            
+            <motion.p variants={cardVariants}>
+              Apart from academics, I actively participate in technical and community activities that help strengthen my leadership, teamwork, and communication skills. I also enjoy content creation and video editing, crafting engaging visual media.
+            </motion.p>
 
-          <article className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6">
-            <h2 className="text-xl font-semibold mb-4">Currently Learning</h2>
-            <ul className="list-disc list-inside text-zinc-300 space-y-2">
-              <li>Node.js and Express.js backend fundamentals</li>
-              <li>File handling and streaming in server-side apps</li>
-              <li>Full-stack development workflow</li>
-              <li>Scalable project structure and clean architecture</li>
-            </ul>
-          </article>
+            <motion.div variants={cardVariants} className="pt-4 flex flex-wrap gap-4">
+              <span className="px-4 py-2 bg-blue-50 border border-blue-100 rounded-xl text-blue-800 text-sm font-semibold">
+                🎓 Internships Open
+              </span>
+              <span className="px-4 py-2 bg-blue-50 border border-blue-100 rounded-xl text-blue-800 text-sm font-semibold">
+                💻 Full-Stack Focus
+              </span>
+              <span className="px-4 py-2 bg-blue-50 border border-blue-100 rounded-xl text-blue-800 text-sm font-semibold">
+                🎬 Video Editor
+              </span>
+              <span className="px-4 py-2 bg-blue-50 border border-blue-100 rounded-xl text-blue-800 text-sm font-semibold">
+                ✨ Quick Learner
+              </span>
+            </motion.div>
+          </motion.div>
+
+          {/* Core Highlights Column */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-5 grid grid-cols-1 gap-6"
+          >
+            {/* Box 1 */}
+            <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 flex gap-4 text-left shadow-sm hover:shadow-md transition-shadow duration-300">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                <BookOpen size={22} />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 text-lg">Education Path</h3>
+                <p className="text-slate-500 text-sm mt-1">Bachelor of Engineering in CSE</p>
+                <p className="text-blue-600 text-xs font-bold mt-2">Chitkara University</p>
+              </div>
+            </div>
+
+            {/* Box 2 */}
+            <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 flex gap-4 text-left shadow-sm hover:shadow-md transition-shadow duration-300">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                <Code2 size={22} />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 text-lg">Stack & Focus</h3>
+                <p className="text-slate-500 text-sm mt-1">MongoDB · Express · React · Node</p>
+                <p className="text-blue-600 text-xs font-bold mt-2">Full-Stack MERN Development</p>
+              </div>
+            </div>
+
+            {/* Box 3 */}
+            <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 flex gap-4 text-left shadow-sm hover:shadow-md transition-shadow duration-300">
+              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600 shrink-0">
+                <Lightbulb size={22} />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 text-lg">Philosophy</h3>
+                <p className="text-slate-500 text-sm mt-1">Building clean, human-centric solutions for real-world impact.</p>
+                <p className="text-blue-600 text-xs font-bold mt-2">Problem Solver</p>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

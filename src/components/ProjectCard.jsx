@@ -143,12 +143,6 @@ const ProjectCard = ({ project }) => {
           </a>
         </section>
       ) : null}
-      <div className="mt-6 pt-5 border-t border-zinc-800">
-        <h4 className={sectionTitleStyle}>Overall Technical Stack</h4>
-        <p className="text-zinc-300 leading-relaxed">
-          Hardware / Embedded Systems · Frontend Development · Backend Basics · Development Tools (GitHub, repositories, code sharing, project structuring)
-        </p>
-      </div>
     </article>
   );
 };
