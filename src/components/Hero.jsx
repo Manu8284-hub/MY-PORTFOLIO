@@ -76,7 +76,7 @@ const Hero = () => {
             </a>
             
             <a
-              href="/RESUME (2).pdf"
+              href="/MANU SHARMA.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold px-8 py-4 rounded-2xl shadow-sm hover:shadow hover:-translate-y-0.5 transition-all duration-300"
