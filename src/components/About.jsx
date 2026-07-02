@@ -36,15 +36,11 @@ const About = () => {
             className="lg:col-span-7 space-y-6 text-slate-600 text-base sm:text-lg leading-relaxed text-left"
           >
             <motion.p variants={cardVariants} className="font-medium text-slate-800">
-              I am Manu Sharma, a B.E. Computer Science and Engineering student with a strong interest in software development and problem solving. I enjoy building modern web applications using the MERN stack and continuously improving my technical skills through projects, coding challenges, and hands-on learning.
+              I am Manu Sharma, a Computer Science & Engineering student specializing in full-stack development using the MERN stack. I love building responsive, user-friendly web applications and solving complex coding challenges.
             </motion.p>
             
             <motion.p variants={cardVariants}>
-              My primary focus is on full-stack web development, where I work with technologies such as React.js, Node.js, Express.js, MongoDB, and PostgreSQL to create efficient and user-friendly applications. I am passionate about learning new technologies, solving real-world problems, and developing solutions that create meaningful impact.
-            </motion.p>
-            
-            <motion.p variants={cardVariants}>
-              Apart from academics, I actively participate in technical and community activities that help strengthen my leadership, teamwork, and communication skills. I also enjoy content creation and video editing, crafting engaging visual media.
+              Beyond academics, I actively participate in technical communities to strengthen my leadership skills, and enjoy creative pursuits like video editing and content creation.
             </motion.p>
 
             <motion.div variants={cardVariants} className="pt-4 flex flex-wrap gap-4">

@@ -1,7 +1,23 @@
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Download, Terminal, Briefcase } from 'lucide-react';
 
 const Hero = () => {
+  const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+  const roles = [
+    "MERN Stack Developer",
+    "Full-Stack Developer",
+    "Problem Solver",
+    "Creative Video Editor"
+  ];
+
+  useEffect(() => {
+    const roleInterval = setInterval(() => {
+      setCurrentRoleIndex((prev) => (prev + 1) % roles.length);
+    }, 2500);
+    return () => clearInterval(roleInterval);
+  }, []);
+
   const handleScrollToProjects = (e) => {
     e.preventDefault();
     const projectsSection = document.getElementById('projects');
@@ -51,12 +67,23 @@ const Hero = () => {
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 leading-tight">
               Hi, I&apos;m <span className="text-gradient">Manu Sharma</span>
             </h1>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-700 flex flex-wrap items-center gap-2">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-700 flex items-center flex-wrap gap-x-2 gap-y-1">
               <span>B.E. CSE Student</span>
-              <span className="text-slate-300 hidden sm:inline">|</span>
-              <span className="text-blue-600">MERN Stack Developer</span>
-              <span className="text-slate-300 hidden sm:inline">|</span>
-              <span>Problem Solver</span>
+              <span className="text-slate-300">|</span>
+              <span className="relative inline-flex items-center overflow-hidden h-[1.3em] min-w-[280px] sm:min-w-[340px]">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={currentRoleIndex}
+                    className="absolute text-blue-600 font-bold text-gradient text-left left-0"
+                    initial={{ y: '100%', opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: '-100%', opacity: 0 }}
+                    transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+                  >
+                    {roles[currentRoleIndex]}
+                  </motion.span>
+                </AnimatePresence>
+              </span>
             </h2>
           </div>
 
