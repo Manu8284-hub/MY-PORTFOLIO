@@ -14,8 +14,8 @@ const featuredProject = {
     "Fully responsive design for all screen sizes"
   ],
   techStack: ["React.js", "Node.js", "Express.js", "MongoDB", "PostgreSQL"],
-  liveUrl: "https://campus-connect-hub-ten.vercel.app",
-  githubUrl: "https://github.com/JatinxKumar/Campus-Connect-Hub",
+  liveUrl: "https://campus-connect-hub-omega-green.vercel.app/",
+  githubUrl: "https://github.com/Manu8284-hub/Campus_Connect_Hub",
 };
 
 const otherProjects = [
