@@ -86,30 +86,21 @@ const Preloader = ({ onComplete }) => {
 
       {/* Loader Content */}
       <div className="flex flex-col items-center z-10">
-        {/* Animated Badge */}
-        <div className="relative w-28 h-28 mb-8 flex items-center justify-center">
-          {/* Animated Spinning Ring */}
+        {/* Video Logo */}
+        <div className="relative w-full max-w-xs mb-8 flex items-center justify-center px-4">
           <motion.div 
-            className="absolute inset-0 border-2 border-transparent border-t-blue-600 border-r-indigo-500 rounded-full"
-            variants={ringVariants}
-            animate="animate"
-          />
-          <motion.div 
-            className="absolute inset-2 border border-dashed border-slate-200 rounded-full"
-            animate={{ rotate: -360 }}
-            transition={{ repeat: Infinity, duration: 6, ease: "linear" }}
-          />
-          {/* Central Logo Box */}
-          <motion.div 
-            className="w-20 h-20 bg-white rounded-2xl overflow-hidden flex items-center justify-center shadow-lg shadow-blue-500/10 border-2 border-white"
+            className="w-full rounded-xl overflow-hidden flex items-center justify-center shadow-xl shadow-blue-500/20 bg-slate-900 border border-slate-800"
             variants={logoVariants}
             initial="initial"
             animate="animate"
           >
-            <img 
-              src="/2410990448.jpg" 
-              alt="Manu Sharma" 
-              className="w-full h-full object-cover"
+            <video 
+              src="/logo_code.mp4" 
+              autoPlay 
+              loop 
+              muted 
+              playsInline
+              className="w-full h-auto object-contain"
             />
           </motion.div>
         </div>
