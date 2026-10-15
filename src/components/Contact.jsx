@@ -3,15 +3,14 @@ import { useState } from 'react';
 import emailjs from '@emailjs/browser';
 import { motion } from 'framer-motion';
 
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'APB6ajSLgGPRUfN_l';
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_qg1kwwo';
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_lm0bbfi';
+
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [status, setStatus] = useState('idle'); // idle, sending, success, error
   const [statusMessage, setStatusMessage] = useState('');
-
-  // EmailJS configuration keys (from existing project setup)
-  const PUBLIC_KEY = 'APB6ajSLgGPRUfN_l';
-  const SERVICE_ID = 'service_qg1kwwo';
-  const TEMPLATE_ID = 'template_lm0bbfi';
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,20 +23,24 @@ const Contact = () => {
     setStatusMessage('');
 
     try {
-      if (!PUBLIC_KEY || PUBLIC_KEY === 'YOUR_PUBLIC_KEY') {
-        throw new Error('EmailJS keys are not configured.');
+      if (!EMAILJS_PUBLIC_KEY || !EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID) {
+        throw new Error('Email service is not configured. Please try the direct email link instead.');
       }
-
-      emailjs.init(PUBLIC_KEY);
 
       const templateParams = {
         to_email: 'manusharma15march2006@gmail.com',
         from_name: formData.name,
         from_email: formData.email,
+        reply_to: formData.email,
         message: formData.message,
       };
 
-      await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams);
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY,
+      );
 
       setStatus('success');
       setStatusMessage('Message sent successfully! I will get back to you soon.');
@@ -45,7 +48,9 @@ const Contact = () => {
       setTimeout(() => setStatus('idle'), 6000);
     } catch (error) {
       setStatus('error');
-      setStatusMessage(error.message || 'Failed to send message. Please email me directly.');
+      setStatusMessage(
+        error?.text || error?.message || 'Failed to send message. Please email me directly.',
+      );
       setTimeout(() => setStatus('idle'), 6000);
     }
   };

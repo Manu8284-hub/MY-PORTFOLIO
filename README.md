@@ -14,3 +14,19 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+## Contact form
+
+The contact form uses EmailJS. Copy `.env.example` to `.env.local` and replace
+the placeholder values with the Public Key, Service ID, and Template ID from
+your EmailJS account before running or deploying the app:
+
+```bash
+VITE_EMAILJS_PUBLIC_KEY=...
+VITE_EMAILJS_SERVICE_ID=...
+VITE_EMAILJS_TEMPLATE_ID=...
+```
+
+The EmailJS template should include `from_name`, `from_email`, `reply_to`, and
+`message` variables. Set the service/template recipient to
+`manusharma15march2006@gmail.com`.
