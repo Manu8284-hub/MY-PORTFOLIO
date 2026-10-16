@@ -4,16 +4,28 @@ import { motion, useMotionValue, useSpring } from 'framer-motion';
 const CustomCursor = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
   // Smooth spring physics for outer ring lag effect
-  const springConfig = { damping: 30, stiffness: 280, mass: 0.6 };
+  const springConfig = { damping: 28, stiffness: 300, mass: 0.5 };
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
+    // Only enable custom cursor if system has a fine pointer (mouse) and no reduced-motion preference
+    const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!hasFinePointer || prefersReducedMotion) {
+      setIsEnabled(false);
+      return;
+    }
+
+    setIsEnabled(true);
+
     const moveCursor = (e) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
@@ -59,26 +71,7 @@ const CustomCursor = () => {
     };
   }, [isVisible, cursorX, cursorY]);
 
-  useEffect(() => {
-    // Hide default cursor only on non-touch devices
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (!isTouchDevice) {
-      document.documentElement.style.cursor = 'none';
-      const style = document.createElement('style');
-      style.innerHTML = `
-        a, button, [role="button"], input, select, textarea, .cursor-pointer, [onclick] {
-          cursor: none !important;
-        }
-      `;
-      document.head.appendChild(style);
-      return () => {
-        document.documentElement.style.cursor = 'auto';
-        document.head.removeChild(style);
-      };
-    }
-  }, []);
-
-  if (typeof window !== 'undefined' && ('ontouchstart' in window || navigator.maxTouchPoints > 0)) {
+  if (!isEnabled) {
     return null;
   }
 
@@ -86,7 +79,7 @@ const CustomCursor = () => {
     <>
       {/* Outer lagging ring */}
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-blue-600 pointer-events-none z-[10000]"
+        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-blue-500/80 pointer-events-none z-[10000]"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
@@ -94,16 +87,16 @@ const CustomCursor = () => {
           translateY: '-50%',
         }}
         animate={{
-          scale: isHovered ? 1.5 : 1,
-          backgroundColor: isHovered ? 'rgba(37, 99, 235, 0.06)' : 'rgba(37, 99, 235, 0)',
+          scale: isHovered ? 1.6 : 1,
+          backgroundColor: isHovered ? 'rgba(37, 99, 235, 0.08)' : 'rgba(37, 99, 235, 0)',
           borderColor: isHovered ? '#2563eb' : '#3b82f6',
           opacity: isVisible ? 1 : 0,
         }}
-        transition={{ type: 'tween', ease: 'backOut', duration: 0.2 }}
+        transition={{ type: 'tween', ease: 'backOut', duration: 0.18 }}
       />
       {/* Inner real-time dot */}
       <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-blue-600 rounded-full pointer-events-none z-[10000]"
+        className="fixed top-0 left-0 w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full pointer-events-none z-[10000]"
         style={{
           x: cursorX,
           y: cursorY,
@@ -111,7 +104,7 @@ const CustomCursor = () => {
           translateY: '-50%',
         }}
         animate={{
-          scale: isHovered ? 0.6 : 1,
+          scale: isHovered ? 0.5 : 1,
           opacity: isVisible ? 1 : 0,
         }}
         transition={{ type: 'tween', duration: 0.1 }}
