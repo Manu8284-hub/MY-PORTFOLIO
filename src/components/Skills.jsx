@@ -10,8 +10,9 @@ import {
 import { TbApi } from 'react-icons/tb';
 import { MdOutlineCode, MdAutoAwesome } from 'react-icons/md';
 import { skillCategories } from '../data/portfolioData';
+import TerminalPromptHeader from './TerminalPromptHeader';
+import PhysicsSkills from './PhysicsSkills';
 
-// Map skill names to icons
 const iconMap = {
   'HTML5': FaHtml5,
   'CSS3 / Tailwind': SiTailwindcss,
@@ -37,86 +38,69 @@ const iconMap = {
   'UI / UX Design': MdAutoAwesome
 };
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.08,
-    }
-  }
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: 'easeOut' }
-  }
-};
-
 const Skills = () => {
   return (
-    <section id="skills" className="py-24 bg-slate-50 dark:bg-[#0b0f19] relative overflow-hidden transition-colors duration-300">
-      <div className="absolute top-1/4 right-0 w-[30rem] h-[30rem] bg-blue-100/30 dark:bg-blue-900/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-indigo-50/20 dark:bg-indigo-900/10 rounded-full blur-3xl pointer-events-none" />
+    <section id="skills" className="py-24 bg-[#05060A] text-[#D6E2F0] relative overflow-hidden font-mono">
+      {/* Background Glows */}
+      <div className="absolute top-1/4 right-0 w-96 h-96 bg-[#00FF9C]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-[#00D9FF]/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
-              My Toolkit
-            </span>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-2">
-              Skills &amp; Expertise
-            </h2>
-          </div>
-          <div className="h-1 w-20 bg-blue-600 dark:bg-blue-400 rounded-full hidden md:block mb-3" />
+        {/* Terminal Header */}
+        <TerminalPromptHeader
+          title="SKILLS"
+          tag="// 02 EXPERTISE"
+          subtitle="Engineering stack, technical competencies, and interactive physics simulation sandbox."
+        />
+
+        {/* 1. Physics Skills Interactive Playground */}
+        <div className="mb-16">
+          <PhysicsSkills />
         </div>
 
-        {/* Categories Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch"
-        >
-          {skillCategories.map((category) => (
+        {/* 2. Structured Skills Categorization Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+          {skillCategories.map((category, catIdx) => (
             <motion.div
               key={category.title}
-              variants={cardVariants}
-              className="glass-card p-6 rounded-3xl shadow-sm hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between dark:border-slate-800"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-60px' }}
+              transition={{ duration: 0.4, delay: catIdx * 0.08 }}
+              className="cyber-bracket cyber-card p-6 rounded-lg bg-[#0B0F17] border border-[#1B2433] hover:border-[#00FF9C]/40 flex flex-col justify-between"
             >
               <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 text-left">
+                <div className="flex items-center justify-between mb-3 text-xs text-[#6B7A90]">
+                  <span className="text-[#00FF9C] font-semibold">// 0{catIdx + 1} MODULE</span>
+                  <span className="text-[10px] uppercase">READY</span>
+                </div>
+
+                <h3 className="text-lg font-bold text-[#D6E2F0] mb-1.5 font-['Space_Grotesk'] text-left">
                   {category.title}
                 </h3>
-                <p className="text-slate-500 dark:text-slate-400 text-sm text-left mb-6 leading-relaxed">
+                <p className="text-[#6B7A90] text-xs text-left mb-5 leading-relaxed">
                   {category.description}
                 </p>
               </div>
 
-              {/* Skills Badges List */}
-              <div className="flex flex-wrap gap-2.5">
+              {/* Skills Badges */}
+              <div className="flex flex-wrap gap-2 pt-2 border-t border-[#1B2433]">
                 {category.skills.map((skill) => {
                   const Icon = iconMap[skill.name] || MdOutlineCode;
                   return (
                     <div
                       key={skill.name}
-                      className="inline-flex items-center gap-2 px-3 py-2 bg-slate-50/90 dark:bg-slate-800/80 border border-slate-200/60 dark:border-slate-700 rounded-xl hover:border-blue-400 dark:hover:border-blue-500 hover:scale-[1.03] transition-all duration-200 cursor-default shadow-2xs"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-[#05060A] border border-[#1B2433] hover:border-[#00D9FF] rounded text-xs transition-colors cursor-default"
                     >
-                      <Icon className={`text-lg ${skill.color}`} />
-                      <span className="text-xs font-bold text-slate-700 dark:text-slate-200">{skill.name}</span>
+                      <Icon className="text-sm text-[#00D9FF]" />
+                      <span className="text-[11px] font-bold text-[#D6E2F0]">{skill.name}</span>
                     </div>
                   );
                 })}
               </div>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

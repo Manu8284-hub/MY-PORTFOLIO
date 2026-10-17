@@ -1,21 +1,26 @@
 import { useEffect, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
 
+/**
+ * CustomCursor & Cursor Spotlight
+ * Soft neon radial glow follows mouse, plus dot and ring.
+ * Becomes "VIEW" over project cards.
+ * Desktop only (disabled on touch / coarse pointer or reduced motion).
+ */
 const CustomCursor = () => {
-  const [isHovered, setIsHovered] = useState(false);
+  const [cursorType, setCursorType] = useState('default'); // 'default' | 'hover' | 'project'
   const [isVisible, setIsVisible] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
-  // Smooth spring physics for outer ring lag effect
-  const springConfig = { damping: 28, stiffness: 300, mass: 0.5 };
+  // Smooth springs for outer ring lag effect
+  const springConfig = { damping: 26, stiffness: 320, mass: 0.4 };
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
 
   useEffect(() => {
-    // Only enable custom cursor if system has a fine pointer (mouse) and no reduced-motion preference
     const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -34,29 +39,30 @@ const CustomCursor = () => {
 
     const handleMouseOver = (e) => {
       const target = e.target;
+      if (!target) return;
+
+      const projectCard = target.closest('[data-cursor="project"]') || target.closest('.project-card');
+      if (projectCard) {
+        setCursorType('project');
+        return;
+      }
+
       if (
-        target && (
-          target.tagName === 'A' ||
-          target.tagName === 'BUTTON' ||
-          target.closest('a') ||
-          target.closest('button') ||
-          (target.getAttribute && target.getAttribute('role') === 'button') ||
-          (target.classList && target.classList.contains('cursor-pointer'))
-        )
+        target.tagName === 'A' ||
+        target.tagName === 'BUTTON' ||
+        target.closest('a') ||
+        target.closest('button') ||
+        (target.getAttribute && target.getAttribute('role') === 'button') ||
+        (target.classList && target.classList.contains('cursor-pointer'))
       ) {
-        setIsHovered(true);
+        setCursorType('hover');
       } else {
-        setIsHovered(false);
+        setCursorType('default');
       }
     };
 
-    const handleMouseLeave = () => {
-      setIsVisible(false);
-    };
-
-    const handleMouseEnter = () => {
-      setIsVisible(true);
-    };
+    const handleMouseLeave = () => setIsVisible(false);
+    const handleMouseEnter = () => setIsVisible(true);
 
     window.addEventListener('mousemove', moveCursor);
     window.addEventListener('mouseover', handleMouseOver);
@@ -75,11 +81,30 @@ const CustomCursor = () => {
     return null;
   }
 
+  const isProject = cursorType === 'project';
+  const isHovered = cursorType === 'hover' || isProject;
+
   return (
     <>
-      {/* Outer lagging ring */}
+      {/* Soft Neon Radial Spotlight that illuminates content */}
       <motion.div
-        className="fixed top-0 left-0 w-8 h-8 rounded-full border border-blue-500/80 pointer-events-none z-[10000]"
+        className="fixed top-0 left-0 w-[450px] h-[450px] rounded-full pointer-events-none z-[9990] mix-blend-screen opacity-20"
+        style={{
+          x: cursorXSpring,
+          y: cursorYSpring,
+          translateX: '-50%',
+          translateY: '-50%',
+          background: 'radial-gradient(circle, rgba(0, 255, 156, 0.35) 0%, rgba(0, 217, 255, 0.15) 35%, transparent 70%)',
+        }}
+        animate={{
+          opacity: isVisible ? (isProject ? 0.3 : 0.2) : 0,
+        }}
+        transition={{ duration: 0.25 }}
+      />
+
+      {/* Outer Lagging Ring / Morphing "VIEW" HUD */}
+      <motion.div
+        className="fixed top-0 left-0 rounded-full border pointer-events-none z-[10000] flex items-center justify-center font-mono font-bold select-none"
         style={{
           x: cursorXSpring,
           y: cursorYSpring,
@@ -87,24 +112,37 @@ const CustomCursor = () => {
           translateY: '-50%',
         }}
         animate={{
-          scale: isHovered ? 1.6 : 1,
-          backgroundColor: isHovered ? 'rgba(37, 99, 235, 0.08)' : 'rgba(37, 99, 235, 0)',
-          borderColor: isHovered ? '#2563eb' : '#3b82f6',
+          width: isProject ? 56 : (isHovered ? 40 : 28),
+          height: isProject ? 56 : (isHovered ? 40 : 28),
+          backgroundColor: isProject
+            ? 'rgba(0, 255, 156, 0.15)'
+            : (isHovered ? 'rgba(0, 255, 156, 0.08)' : 'rgba(0, 0, 0, 0)'),
+          borderColor: isProject ? '#00FF9C' : (isHovered ? '#00D9FF' : 'rgba(0, 255, 156, 0.6)'),
+          boxShadow: isProject ? '0 0 15px rgba(0, 255, 156, 0.4)' : 'none',
           opacity: isVisible ? 1 : 0,
         }}
-        transition={{ type: 'tween', ease: 'backOut', duration: 0.18 }}
-      />
-      {/* Inner real-time dot */}
+        transition={{ type: 'tween', ease: 'easeOut', duration: 0.15 }}
+      >
+        {isProject && (
+          <span className="text-[10px] tracking-widest text-[#00FF9C] font-extrabold animate-pulse">
+            VIEW
+          </span>
+        )}
+      </motion.div>
+
+      {/* Real-time Inner Core Dot */}
       <motion.div
-        className="fixed top-0 left-0 w-2 h-2 bg-blue-600 dark:bg-blue-400 rounded-full pointer-events-none z-[10000]"
+        className="fixed top-0 left-0 w-2 h-2 rounded-full pointer-events-none z-[10000]"
         style={{
           x: cursorX,
           y: cursorY,
           translateX: '-50%',
           translateY: '-50%',
+          backgroundColor: isProject ? '#00FF9C' : '#00FF9C',
+          boxShadow: '0 0 8px #00FF9C',
         }}
         animate={{
-          scale: isHovered ? 0.5 : 1,
+          scale: isProject ? 0 : (isHovered ? 0.4 : 1),
           opacity: isVisible ? 1 : 0,
         }}
         transition={{ type: 'tween', duration: 0.1 }}

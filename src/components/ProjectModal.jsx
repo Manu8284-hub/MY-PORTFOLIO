@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { X, ExternalLink, Github, AlertCircle, Cpu, CheckCircle2, Award } from 'lucide-react';
+import { X, ExternalLink, Github, AlertCircle, Cpu, CheckCircle2, Award, Terminal } from 'lucide-react';
 import { useEffect } from 'react';
 
 const ProjectModal = ({ project, onClose }) => {
@@ -23,163 +23,184 @@ const ProjectModal = ({ project, onClose }) => {
     <div
       role="dialog"
       aria-modal="true"
-      aria-labelledby="modal-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/70 backdrop-blur-md overflow-y-auto"
+      aria-labelledby="terminal-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md overflow-y-auto font-mono select-none"
       onClick={onClose}
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        transition={{ duration: 0.25, ease: 'easeOut' }}
+        exit={{ opacity: 0, scale: 0.95, y: 15 }}
+        transition={{ duration: 0.2, ease: 'easeOut' }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl p-6 sm:p-8 text-left"
+        className="cyber-bracket relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-[#0B0F17] border border-[#00FF9C]/60 rounded-lg shadow-[0_0_40px_rgba(0,255,156,0.25)] p-0 text-left"
       >
-        {/* Close Button */}
-        <button
-          onClick={onClose}
-          className="absolute top-5 right-5 p-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors cursor-pointer"
-          aria-label="Close Case Study"
-        >
-          <X size={18} />
-        </button>
+        {/* Terminal Window Header Bar */}
+        <div className="flex items-center justify-between px-5 py-3.5 bg-[#05060A] border-b border-[#1B2433] sticky top-0 z-20">
+          <div className="flex items-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-[#FF2BD6] inline-block shadow-[0_0_6px_#FF2BD6]" />
+            <span className="w-3 h-3 rounded-full bg-amber-400 inline-block" />
+            <span className="w-3 h-3 rounded-full bg-[#00FF9C] inline-block shadow-[0_0_6px_#00FF9C]" />
+            <div className="flex items-center gap-2 ml-3 text-xs text-[#6B7A90]">
+              <Terminal size={14} className="text-[#00FF9C]" />
+              <span className="text-[#D6E2F0]">case_study.sh --id={project.id}</span>
+            </div>
+          </div>
 
-        {/* Header */}
-        <div className="space-y-2 pr-8">
-          <span className="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
-            {category}
-          </span>
-          <h2 id="modal-title" className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">
-            {title}
-          </h2>
-          <p className="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
-            {overview}
-          </p>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded bg-[#111723] hover:bg-[#1B2433] text-[#6B7A90] hover:text-[#00FF9C] border border-[#1B2433] hover:border-[#00FF9C] transition-colors cursor-pointer"
+            aria-label="Close Case Study"
+          >
+            <X size={16} />
+          </button>
         </div>
 
-        {/* Media Preview */}
-        {image && (
-          <div className="my-6 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 h-52 sm:h-64 relative bg-slate-100 dark:bg-slate-800">
-            <img src={image} alt={title} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent pointer-events-none" />
-          </div>
-        )}
-
-        {/* Metrics Grid */}
-        {metrics && metrics.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
-            {metrics.map((m, idx) => (
-              <div
-                key={idx}
-                className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/70 dark:border-slate-700 text-center"
-              >
-                <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                  {m.label}
-                </p>
-                <p className="text-sm font-extrabold text-blue-600 dark:text-blue-400 mt-0.5">
-                  {m.value}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* Case Study Breakdown: Problem -> Decision -> Result */}
-        {caseStudy && (
-          <div className="space-y-6 border-t border-slate-100 dark:border-slate-800 pt-6">
-            <h3 className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
-              <Award size={15} className="text-blue-600 dark:text-blue-400" />
-              Engineering Case Study
-            </h3>
-
-            {/* Problem */}
-            <div className="flex gap-4 items-start">
-              <div className="w-9 h-9 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 flex items-center justify-center text-amber-600 dark:text-amber-400 shrink-0 mt-0.5">
-                <AlertCircle size={18} />
-              </div>
-              <div className="space-y-1">
-                <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                  1. The Problem
-                </h4>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {caseStudy.problem}
-                </p>
-              </div>
-            </div>
-
-            {/* Decision */}
-            <div className="flex gap-4 items-start">
-              <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 mt-0.5">
-                <Cpu size={18} />
-              </div>
-              <div className="space-y-1">
-                <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                  2. Architectural Decisions
-                </h4>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {caseStudy.decision}
-                </p>
-              </div>
-            </div>
-
-            {/* Result */}
-            <div className="flex gap-4 items-start">
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5">
-                <CheckCircle2 size={18} />
-              </div>
-              <div className="space-y-1">
-                <h4 className="text-sm font-bold text-slate-900 dark:text-white">
-                  3. Key Results &amp; Impact
-                </h4>
-                <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {caseStudy.result}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Tech Badges */}
-        <div className="border-t border-slate-100 dark:border-slate-800 pt-6 mt-6">
-          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
-            Technologies Used
-          </h4>
-          <div className="flex flex-wrap gap-2">
-            {techStack.map((tech) => (
-              <span
-                key={tech}
-                className="px-3 py-1 bg-slate-100 dark:bg-slate-800 border border-slate-200/60 dark:border-slate-700 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-200"
-              >
-                {tech}
+        {/* Modal Body */}
+        <div className="p-6 sm:p-8 space-y-6">
+          {/* Header Info */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-xs text-[#00FF9C]">
+              <span className="px-2 py-0.5 rounded bg-[#00FF9C]/10 border border-[#00FF9C]/40 text-[10px] font-bold uppercase tracking-wider">
+                {category}
               </span>
-            ))}
-          </div>
-        </div>
+              <span>// ARCHITECTURE SPECIFICATION</span>
+            </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-3 pt-8 border-t border-slate-100 dark:border-slate-800 mt-6">
-          {liveUrl && (
-            <a
-              href={liveUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-md shadow-blue-500/20"
-            >
-              <span>Live Application</span>
-              <ExternalLink size={15} />
-            </a>
+            <h2 id="terminal-modal-title" className="text-2xl sm:text-4xl font-extrabold text-[#D6E2F0] font-['Space_Grotesk']">
+              {title}
+            </h2>
+
+            <p className="text-[#6B7A90] text-xs sm:text-sm leading-relaxed">
+              &gt; {overview}
+            </p>
+          </div>
+
+          {/* Media Preview */}
+          {image && (
+            <div className="rounded border border-[#1B2433] h-52 sm:h-64 relative bg-[#05060A] overflow-hidden">
+              <img src={image} alt={title} className="w-full h-full object-cover filter brightness-95" />
+              <div className="absolute inset-0 cyber-scanlines opacity-40 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F17] via-transparent to-transparent opacity-60" />
+            </div>
           )}
-          {githubUrl && (
-            <a
-              href={githubUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 font-semibold text-sm rounded-xl border border-slate-200 dark:border-slate-700 transition-all duration-200"
-            >
-              <Github size={16} />
-              <span>GitHub Repository</span>
-            </a>
+
+          {/* Metrics Grid */}
+          {metrics && metrics.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {metrics.map((m, idx) => (
+                <div
+                  key={idx}
+                  className="p-3 rounded bg-[#05060A] border border-[#1B2433] text-left"
+                >
+                  <p className="text-[10px] uppercase font-bold text-[#6B7A90]">
+                    // {m.label}
+                  </p>
+                  <p className="text-sm font-bold text-[#00FF9C] mt-1">
+                    {m.value}
+                  </p>
+                </div>
+              ))}
+            </div>
           )}
+
+          {/* Case Study Breakdown: Problem -> Decision -> Result */}
+          {caseStudy && (
+            <div className="space-y-5 border-t border-[#1B2433] pt-6">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-[#00D9FF] flex items-center gap-2">
+                <Award size={15} className="text-[#00D9FF]" />
+                [ ENGINEERING CASE STUDY BREAKDOWN ]
+              </h3>
+
+              {/* Problem */}
+              <div className="flex gap-4 items-start p-4 rounded bg-[#05060A] border border-[#1B2433]">
+                <div className="w-8 h-8 rounded bg-amber-500/10 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
+                  <AlertCircle size={16} />
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-xs font-bold text-amber-400 uppercase tracking-wider">
+                    01 // THE CHALLENGE
+                  </h4>
+                  <p className="text-xs text-[#D6E2F0] leading-relaxed">
+                    {caseStudy.problem}
+                  </p>
+                </div>
+              </div>
+
+              {/* Decision */}
+              <div className="flex gap-4 items-start p-4 rounded bg-[#05060A] border border-[#1B2433]">
+                <div className="w-8 h-8 rounded bg-[#00D9FF]/10 border border-[#00D9FF]/40 flex items-center justify-center text-[#00D9FF] shrink-0 mt-0.5">
+                  <Cpu size={16} />
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-xs font-bold text-[#00D9FF] uppercase tracking-wider">
+                    02 // ARCHITECTURAL DECISIONS
+                  </h4>
+                  <p className="text-xs text-[#D6E2F0] leading-relaxed">
+                    {caseStudy.decision}
+                  </p>
+                </div>
+              </div>
+
+              {/* Result */}
+              <div className="flex gap-4 items-start p-4 rounded bg-[#05060A] border border-[#1B2433]">
+                <div className="w-8 h-8 rounded bg-[#00FF9C]/10 border border-[#00FF9C]/40 flex items-center justify-center text-[#00FF9C] shrink-0 mt-0.5">
+                  <CheckCircle2 size={16} />
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-xs font-bold text-[#00FF9C] uppercase tracking-wider">
+                    03 // KEY RESULTS &amp; IMPACT
+                  </h4>
+                  <p className="text-xs text-[#D6E2F0] leading-relaxed">
+                    {caseStudy.result}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Tech Badges */}
+          <div className="border-t border-[#1B2433] pt-5">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-[#6B7A90] mb-2.5">
+              [ STACK MODULES ]
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              {techStack.map((tech) => (
+                <span
+                  key={tech}
+                  className="px-2.5 py-1 bg-[#111723] border border-[#1B2433] rounded text-xs text-[#00FF9C]"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-3 pt-6 border-t border-[#1B2433]">
+            {liveUrl && (
+              <a
+                href={liveUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="cyber-bracket inline-flex items-center gap-2 px-6 py-2.5 bg-[#00FF9C] hover:bg-[#00FF9C]/90 text-black font-extrabold text-xs uppercase tracking-wider rounded shadow-[0_0_15px_rgba(0,255,156,0.4)] transition-all cursor-pointer"
+              >
+                <span>[ LAUNCH LIVE DEMO ]</span>
+                <ExternalLink size={14} />
+              </a>
+            )}
+            {githubUrl && (
+              <a
+                href={githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="cyber-bracket inline-flex items-center gap-2 px-6 py-2.5 bg-[#05060A] hover:bg-[#111723] text-[#D6E2F0] hover:text-[#00FF9C] font-bold text-xs uppercase tracking-wider rounded border border-[#1B2433] hover:border-[#00FF9C] transition-all cursor-pointer"
+              >
+                <Github size={15} />
+                <span>[ VIEW SOURCE CODE ]</span>
+              </a>
+            )}
+          </div>
         </div>
       </motion.div>
     </div>

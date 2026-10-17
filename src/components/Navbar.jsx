@@ -5,13 +5,13 @@ import { useTheme } from '../context/ThemeContext';
 import { socialLinks } from '../data/portfolioData';
 
 const navItems = [
-  { label: 'About', id: 'about' },
-  { label: 'Skills', id: 'skills' },
-  { label: 'Projects', id: 'projects' },
-  { label: 'Education', id: 'education' },
-  { label: 'Profiles', id: 'coding-profiles' },
-  { label: 'Guestbook', id: 'guestbook' },
-  { label: 'Contact', id: 'contact' },
+  { label: 'ABOUT', num: '01', id: 'about' },
+  { label: 'SKILLS', num: '02', id: 'skills' },
+  { label: 'PROJECTS', num: '03', id: 'projects' },
+  { label: 'EDUCATION', num: '04', id: 'education' },
+  { label: 'PROFILES', num: '05', id: 'coding-profiles' },
+  { label: 'GUESTBOOK', num: '06', id: 'guestbook' },
+  { label: 'CONTACT', num: '07', id: 'contact' },
 ];
 
 const Navbar = ({ onOpenTerminal }) => {
@@ -25,9 +25,7 @@ const Navbar = ({ onOpenTerminal }) => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
 
-      // Section tracking logic
       const scrollPosition = window.scrollY + 160;
-      
       if (window.scrollY < 100) {
         setActiveSection('hero');
         return;
@@ -81,64 +79,74 @@ const Navbar = ({ onOpenTerminal }) => {
   return (
     <>
       <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        className={`fixed top-0 w-full z-50 transition-all duration-300 font-mono ${
           isScrolled
-            ? 'glass-nav py-3 shadow-[0_4px_30px_rgba(0,0,0,0.03)]'
+            ? 'glass-nav py-3 border-b border-[#1B2433] shadow-[0_4px_25px_rgba(0,0,0,0.6)]'
             : 'bg-transparent py-5 border-b border-transparent'
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          {/* Logo with Glitch Effect */}
           <a
             href="#hero"
             onClick={handleBrandClick}
-            className="text-lg font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2 group"
+            className="text-base sm:text-lg font-bold tracking-tight text-[#D6E2F0] flex items-center gap-2 group"
           >
-            <span className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-extrabold text-sm transition-transform duration-300 group-hover:scale-105 shadow-md shadow-blue-500/20">
-              MS
+            <span className="w-8 h-8 rounded border border-[#00FF9C] bg-[#0B0F17] flex items-center justify-center text-[#00FF9C] font-extrabold text-xs shadow-[0_0_10px_rgba(0,255,156,0.3)] transition-transform duration-300 group-hover:scale-105">
+              MS_
             </span>
-            <span className="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300 font-extrabold tracking-wide">
+            <span
+              className="cyber-glitch hover:text-[#00FF9C] transition-colors font-bold tracking-wider"
+              data-text="MANU SHARMA"
+            >
               MANU SHARMA
             </span>
           </a>
 
           {/* Desktop Navigation Links */}
           <div className="hidden lg:flex items-center space-x-1">
-            {navItems.map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                onClick={(e) => handleNavClick(e, item.id)}
-                className={`relative px-4 py-2 text-xs font-semibold tracking-wide uppercase transition-colors duration-200 rounded-lg ${
-                  activeSection === item.id
-                    ? 'text-blue-600 dark:text-blue-400 font-bold'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/60 dark:hover:bg-slate-800/60'
-                }`}
-              >
-                {item.label}
-                {activeSection === item.id && (
-                  <motion.span
-                    layoutId="activeNavIndicator"
-                    className="absolute bottom-0 left-4 right-4 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
-              </a>
-            ))}
+            {navItems.map((item) => {
+              const isActive = activeSection === item.id;
+              return (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  onClick={(e) => handleNavClick(e, item.id)}
+                  className={`relative px-3.5 py-1.5 text-xs font-mono tracking-wider transition-all duration-200 rounded ${
+                    isActive
+                      ? 'text-[#00FF9C] font-bold bg-[#00FF9C]/10 border border-[#00FF9C]/40 shadow-[0_0_12px_rgba(0,255,156,0.15)]'
+                      : 'text-[#6B7A90] hover:text-[#D6E2F0] hover:bg-[#0B0F17]'
+                  }`}
+                >
+                  <span className="text-[10px] text-[#6B7A90] mr-1.5 opacity-70">
+                    {item.num}
+                  </span>
+                  {item.label}
+                  {isActive && (
+                    <motion.span
+                      layoutId="activeNavIndicator"
+                      className="absolute -bottom-1 left-2 right-2 h-[2px] bg-[#00FF9C] shadow-[0_0_8px_#00FF9C]"
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </a>
+              );
+            })}
           </div>
 
           {/* Actions & Utilities */}
           <div className="flex items-center space-x-2 sm:space-x-3">
-            {/* Terminal Mode Launcher Button */}
+            {/* Terminal CLI Launcher */}
             {onOpenTerminal && (
               <button
                 type="button"
                 onClick={onOpenTerminal}
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-blue-400 rounded-xl border border-slate-200 dark:border-slate-700 transition-all duration-200 cursor-pointer shadow-sm"
-                title="Launch Terminal CLI Mode"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 text-xs font-mono font-semibold text-[#00FF9C] bg-[#0B0F17] hover:bg-[#00FF9C]/10 rounded border border-[#00FF9C]/40 transition-all duration-200 cursor-pointer shadow-[0_0_10px_rgba(0,255,156,0.15)] hover:shadow-[0_0_15px_rgba(0,255,156,0.3)]"
+                title="Launch Terminal CLI Mode (`)"
                 aria-label="Launch Terminal CLI"
               >
-                <Terminal size={14} className="text-blue-600 dark:text-blue-400" />
-                <span className="font-mono">CLI</span>
+                <Terminal size={13} className="text-[#00FF9C]" />
+                <span>&gt; CLI</span>
               </button>
             )}
 
@@ -146,11 +154,11 @@ const Navbar = ({ onOpenTerminal }) => {
             <button
               type="button"
               onClick={toggleTheme}
-              className="p-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all duration-200 cursor-pointer"
-              aria-label={isDark ? "Switch to light theme" : "Switch to dark theme"}
-              title={isDark ? "Switch to light theme" : "Switch to dark theme"}
+              className="p-2 text-[#6B7A90] hover:text-[#00FF9C] hover:bg-[#0B0F17] rounded border border-transparent hover:border-[#1B2433] transition-all duration-200 cursor-pointer"
+              aria-label={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
+              title={isDark ? 'Switch to light theme' : 'Switch to dark theme'}
             >
-              {isDark ? <Sun size={18} className="text-amber-400" /> : <Moon size={18} />}
+              {isDark ? <Sun size={17} className="text-[#00FF9C]" /> : <Moon size={17} />}
             </button>
 
             {/* Social Icons */}
@@ -158,26 +166,26 @@ const Navbar = ({ onOpenTerminal }) => {
               href={socialLinks.github}
               target="_blank"
               rel="noreferrer"
-              className="p-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:scale-110 transition-all duration-200 hidden sm:inline-flex"
+              className="p-2 text-[#6B7A90] hover:text-[#00FF9C] hover:scale-110 transition-all duration-200 hidden sm:inline-flex"
               aria-label="GitHub Profile"
             >
-              <Github size={18} />
+              <Github size={17} />
             </a>
             <a
               href={socialLinks.linkedin}
               target="_blank"
               rel="noreferrer"
-              className="p-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 hover:scale-110 transition-all duration-200 hidden sm:inline-flex"
+              className="p-2 text-[#6B7A90] hover:text-[#00D9FF] hover:scale-110 transition-all duration-200 hidden sm:inline-flex"
               aria-label="LinkedIn Profile"
             >
-              <Linkedin size={18} />
+              <Linkedin size={17} />
             </a>
-            
+
             {/* Enlarged Avatar Toggle */}
             <button
               type="button"
               onClick={() => setIsPhotoOpen(true)}
-              className="w-9 h-9 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden flex items-center justify-center cursor-pointer hover:scale-105 hover:border-blue-600 transition-all duration-300 relative group shadow-sm"
+              className="w-8 h-8 rounded border border-[#00FF9C]/50 bg-[#0B0F17] overflow-hidden flex items-center justify-center cursor-pointer hover:scale-105 hover:border-[#00FF9C] transition-all duration-300 relative group shadow-[0_0_10px_rgba(0,255,156,0.2)]"
               aria-label="Open profile photo"
             >
               <img
@@ -185,22 +193,22 @@ const Navbar = ({ onOpenTerminal }) => {
                 alt="Manu Sharma"
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-blue-600/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-[#00FF9C]/20 opacity-0 group-hover:opacity-100 transition-opacity" />
             </button>
 
             {/* Mobile Menu Toggle Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 cursor-pointer"
+              className="lg:hidden p-2 text-[#6B7A90] hover:text-[#00FF9C] transition-colors duration-200 cursor-pointer"
               aria-label="Toggle Navigation Menu"
             >
-              {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+              {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Mobile Navigation Sidebar */}
+      {/* Mobile Navigation Dropdown */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -208,26 +216,27 @@ const Navbar = ({ onOpenTerminal }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-x-0 top-16 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl z-40 border-b border-slate-200 dark:border-slate-800 p-6 flex flex-col gap-4 shadow-xl lg:hidden"
+            className="fixed inset-x-0 top-16 bg-[#0B0F17]/95 backdrop-blur-xl z-40 border-b border-[#1B2433] p-6 flex flex-col gap-4 shadow-2xl lg:hidden font-mono"
           >
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2.5">
               {navItems.map((item) => (
                 <a
                   key={item.id}
                   href={`#${item.id}`}
                   onClick={(e) => handleNavClick(e, item.id)}
-                  className={`flex items-center justify-center py-3 px-4 rounded-xl text-sm font-semibold tracking-wide uppercase transition-colors ${
+                  className={`flex items-center justify-center py-2.5 px-3 rounded text-xs font-mono tracking-wider uppercase transition-colors border ${
                     activeSection === item.id
-                      ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 font-bold'
-                      : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                      ? 'bg-[#00FF9C]/10 border-[#00FF9C] text-[#00FF9C] font-bold shadow-[0_0_10px_rgba(0,255,156,0.2)]'
+                      : 'border-[#1B2433] text-[#6B7A90] hover:text-[#D6E2F0] hover:bg-[#111723]'
                   }`}
                 >
+                  <span className="text-[10px] opacity-60 mr-1.5">{item.num}</span>
                   {item.label}
                 </a>
               ))}
             </div>
-            
-            <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">
+
+            <div className="flex items-center justify-between pt-4 border-t border-[#1B2433]">
               {onOpenTerminal && (
                 <button
                   type="button"
@@ -235,9 +244,9 @@ const Navbar = ({ onOpenTerminal }) => {
                     setIsMobileMenuOpen(false);
                     onOpenTerminal();
                   }}
-                  className="flex items-center gap-2 text-xs font-mono font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-3 py-2 rounded-xl"
+                  className="flex items-center gap-2 text-xs font-mono font-bold text-[#00FF9C] bg-[#00FF9C]/10 border border-[#00FF9C]/40 px-3 py-2 rounded"
                 >
-                  <Terminal size={15} /> Terminal CLI
+                  <Terminal size={14} /> &gt; Terminal CLI
                 </button>
               )}
               <div className="flex gap-4">
@@ -245,17 +254,17 @@ const Navbar = ({ onOpenTerminal }) => {
                   href={socialLinks.github}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm transition-colors flex items-center gap-1.5"
+                  className="text-[#6B7A90] hover:text-[#00FF9C] text-xs transition-colors flex items-center gap-1.5"
                 >
-                  <Github size={16} /> GitHub
+                  <Github size={15} /> GitHub
                 </a>
                 <a
                   href={socialLinks.linkedin}
                   target="_blank"
                   rel="noreferrer"
-                  className="text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium text-sm transition-colors flex items-center gap-1.5"
+                  className="text-[#6B7A90] hover:text-[#00D9FF] text-xs transition-colors flex items-center gap-1.5"
                 >
-                  <Linkedin size={16} /> LinkedIn
+                  <Linkedin size={15} /> LinkedIn
                 </a>
               </div>
             </div>
@@ -270,31 +279,32 @@ const Navbar = ({ onOpenTerminal }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4"
+            className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 font-mono"
             onClick={() => setIsPhotoOpen(false)}
           >
             <motion.div
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
-              className="relative max-w-sm md:max-w-md bg-white dark:bg-slate-900 rounded-3xl p-3 border border-slate-100 dark:border-slate-800 shadow-2xl"
+              className="relative max-w-sm md:max-w-md bg-[#0B0F17] rounded-lg p-4 border border-[#00FF9C] shadow-[0_0_35px_rgba(0,255,156,0.25)] cyber-bracket"
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={() => setIsPhotoOpen(false)}
-                className="absolute top-4 right-4 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-800 dark:text-slate-200 hover:text-red-500 rounded-full p-2 border border-slate-200/50 dark:border-slate-700 shadow-md transition-colors cursor-pointer"
+                className="absolute top-4 right-4 bg-[#1B2433] text-[#6B7A90] hover:text-[#00FF9C] rounded p-1.5 border border-[#1B2433] hover:border-[#00FF9C] transition-colors cursor-pointer"
                 aria-label="Close"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
               <img
                 src="/2410990448.jpg"
                 alt="Manu Sharma enlarged portrait"
-                className="w-full max-w-full rounded-2xl object-cover aspect-square shadow-inner"
+                className="w-full max-w-full rounded object-cover aspect-square border border-[#1B2433]"
               />
-              <div className="p-4 text-center">
-                <h4 className="font-bold text-lg text-slate-900 dark:text-white">Manu Sharma</h4>
-                <p className="text-sm text-slate-500 dark:text-slate-400">B.E. CSE Student | MERN Stack Developer</p>
+              <div className="pt-4 text-center">
+                <div className="text-xs text-[#00FF9C] mb-1">// IDENTIFIED: AUTHORIZED_OPERATOR</div>
+                <h4 className="font-bold text-lg text-[#D6E2F0]">MANU SHARMA</h4>
+                <p className="text-xs text-[#6B7A90] mt-1">B.E. CSE Student | MERN Stack Developer</p>
               </div>
             </motion.div>
           </motion.div>

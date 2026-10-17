@@ -1,23 +1,43 @@
-import { Mail, Linkedin, Github, Send, ExternalLink, Copy, Check } from 'lucide-react';
 import { useState } from 'react';
+import { Mail, Linkedin, Github, Send, ExternalLink, Copy, Check, Terminal, AlertCircle } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import emailjs from '@emailjs/browser';
-import { motion } from 'framer-motion';
 import { personalInfo, socialLinks } from '../data/portfolioData';
+import TerminalPromptHeader from './TerminalPromptHeader';
 
-// User's working EmailJS credentials with environment override support
+// TODO: Connect and configure production Email service credentials here
 const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'APB6ajSLgGPRUfN_l';
 const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_qg1kwwo';
 const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_lm0bbfi';
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [status, setStatus] = useState('idle'); // idle, sending, success, error
+  const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState('idle'); // idle | sending | success | error
   const [statusMessage, setStatusMessage] = useState('');
   const [copied, setCopied] = useState(false);
+
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.name.trim()) newErrors.name = 'OPERATOR NAME REQUIRED';
+    if (!formData.email.trim()) {
+      newErrors.email = 'TRANSMISSION ADDR REQUIRED';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'INVALID ADDR SYNTAX';
+    }
+    if (!formData.message.trim() || formData.message.length < 10) {
+      newErrors.message = 'PAYLOAD TOO SHORT (MIN 10 CHARS)';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: null }));
+    }
   };
 
   const handleCopyEmail = () => {
@@ -28,14 +48,13 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validate()) return;
+
     setStatus('sending');
     setStatusMessage('');
 
     try {
-      if (!EMAILJS_PUBLIC_KEY || !EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID) {
-        throw new Error('Email service credentials are not configured.');
-      }
-
+      // TODO: Connect your backend endpoint or EmailJS webhook here
       const templateParams = {
         to_email: personalInfo.email,
         from_name: formData.name,
@@ -48,25 +67,24 @@ const Contact = () => {
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         templateParams,
-        EMAILJS_PUBLIC_KEY,
+        EMAILJS_PUBLIC_KEY
       );
 
       setStatus('success');
-      setStatusMessage('Message sent successfully! I will respond to your email shortly.');
+      setStatusMessage('PACKET TRANSMITTED SUCCESSFULLY. ACK RECEIVED.');
       setFormData({ name: '', email: '', message: '' });
-      setTimeout(() => setStatus('idle'), 7000);
+      setTimeout(() => setStatus('idle'), 8000);
     } catch (error) {
       console.error('Email send error:', error);
       setStatus('error');
-      
       const errMsg = error?.text || error?.message || '';
       if (errMsg.includes('Invalid grant') || errMsg.includes('reconnect your Gmail')) {
         setStatusMessage(
-          'EmailJS Gmail service connection expired: Gmail token needs reconnection in the EmailJS dashboard. You can send directly using the button below:'
+          'EmailJS Gmail service connection expired: Gmail token needs reconnection. Use direct email transmission below:'
         );
       } else {
         setStatusMessage(
-          errMsg || `Failed to send automatically. Please use the direct email link below.`
+          errMsg || 'TRANSMISSION FAILED. Please route via direct email protocol below.'
         );
       }
     }
@@ -79,174 +97,202 @@ const Contact = () => {
   )}`;
 
   return (
-    <section id="contact" className="py-24 bg-slate-50 dark:bg-[#0b0f19] relative overflow-hidden transition-colors duration-300">
-      <div className="absolute top-1/4 right-0 w-96 h-96 bg-blue-100/30 dark:bg-blue-900/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-indigo-100/10 dark:bg-indigo-900/10 rounded-full blur-3xl pointer-events-none" />
+    <section id="contact" className="py-24 bg-[#05060A] text-[#D6E2F0] relative overflow-hidden font-mono">
+      <div className="absolute top-1/4 right-0 w-96 h-96 bg-[#00FF9C]/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-[#00D9FF]/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400">
-              Get In Touch
-            </span>
-            <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mt-2">
-              Contact Me
-            </h2>
-          </div>
-          <div className="h-1 w-20 bg-blue-600 dark:bg-blue-400 rounded-full hidden md:block mb-3" />
-        </div>
+        <TerminalPromptHeader
+          title="CONTACT"
+          tag="// 07 TRANSMIT"
+          subtitle="Open terminal uplink, dispatch project proposals, or establish professional connection."
+        />
 
-        {/* Contact Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start text-left">
-          
-          {/* Form Column */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start text-left">
+          {/* Terminal Console Form (7 cols) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5 }}
             className="lg:col-span-7"
           >
-            <form onSubmit={handleSubmit} className="glass-card p-8 sm:p-10 rounded-3xl shadow-sm bg-white/80 dark:bg-slate-900/80 space-y-6 border border-slate-200/60 dark:border-slate-800">
-              <div>
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Send Me a Message</h3>
-                <p className="text-slate-500 dark:text-slate-400 text-sm">Have an opportunity, internship, or project to discuss? Fill out the form below.</p>
+            <div className="cyber-bracket cyber-card rounded-lg bg-[#0B0F17] border border-[#1B2433] shadow-[0_0_30px_rgba(0,0,0,0.8)] overflow-hidden">
+              {/* Form Terminal Bar */}
+              <div className="px-5 py-3 bg-[#05060A] border-b border-[#1B2433] flex items-center justify-between text-xs text-[#6B7A90]">
+                <div className="flex items-center gap-2">
+                  <Terminal size={14} className="text-[#00FF9C]" />
+                  <span className="text-[#D6E2F0]">dispatch_packet.sh [PORT 443]</span>
+                </div>
+                <span className="text-[10px] text-[#00FF9C]">STATUS: LISTENING</span>
               </div>
 
-              <div className="space-y-4">
+              <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
-                    Your Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition-all duration-200 font-medium text-sm"
-                    placeholder="E.g., Alex Johnson"
-                  />
+                  <h3 className="text-lg font-bold text-[#D6E2F0] font-['Space_Grotesk']">
+                    Dispatch Transmission
+                  </h3>
+                  <p className="text-xs text-[#6B7A90] mt-1">
+                    Enter payload details below. Payload verified before socket dispatch.
+                  </p>
                 </div>
 
-                <div>
-                  <label htmlFor="email" className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition-all duration-200 font-medium text-sm"
-                    placeholder="E.g., alex@company.com"
-                  />
+                <div className="space-y-4">
+                  {/* Name field */}
+                  <div>
+                    <label htmlFor="name" className="flex items-center justify-between text-xs font-bold text-[#D6E2F0] mb-1.5">
+                      <span>&gt; SENDER_NAME:</span>
+                      {errors.name && <span className="text-[#FF2BD6] text-[10px]">{errors.name}</span>}
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      className={`w-full px-4 py-2.5 bg-[#05060A] border rounded text-xs font-mono text-[#D6E2F0] placeholder-[#6B7A90] focus:outline-none transition-colors ${
+                        errors.name ? 'border-[#FF2BD6]' : 'border-[#1B2433] focus:border-[#00FF9C]'
+                      }`}
+                      placeholder="e.g. Alex Johnson"
+                    />
+                  </div>
+
+                  {/* Email field */}
+                  <div>
+                    <label htmlFor="email" className="flex items-center justify-between text-xs font-bold text-[#D6E2F0] mb-1.5">
+                      <span>&gt; SENDER_EMAIL:</span>
+                      {errors.email && <span className="text-[#FF2BD6] text-[10px]">{errors.email}</span>}
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className={`w-full px-4 py-2.5 bg-[#05060A] border rounded text-xs font-mono text-[#D6E2F0] placeholder-[#6B7A90] focus:outline-none transition-colors ${
+                        errors.email ? 'border-[#FF2BD6]' : 'border-[#1B2433] focus:border-[#00FF9C]'
+                      }`}
+                      placeholder="e.g. alex@company.com"
+                    />
+                  </div>
+
+                  {/* Message field */}
+                  <div>
+                    <label htmlFor="message" className="flex items-center justify-between text-xs font-bold text-[#D6E2F0] mb-1.5">
+                      <span>&gt; PAYLOAD_BODY:</span>
+                      {errors.message && <span className="text-[#FF2BD6] text-[10px]">{errors.message}</span>}
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      rows={5}
+                      className={`w-full px-4 py-2.5 bg-[#05060A] border rounded text-xs font-mono text-[#D6E2F0] placeholder-[#6B7A90] focus:outline-none transition-colors resize-none ${
+                        errors.message ? 'border-[#FF2BD6]' : 'border-[#1B2433] focus:border-[#00FF9C]'
+                      }`}
+                      placeholder="e.g. Hi Manu, we are building a full-stack system and would love to collaborate..."
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label htmlFor="message" className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
-                    Your Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows={5}
-                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:bg-white dark:focus:bg-slate-800 transition-all duration-200 resize-none font-medium text-sm"
-                    placeholder="E.g., Hi Manu, we love your work and would like to discuss an engineering role..."
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={status === 'sending'}
-                className="w-full inline-flex items-center justify-center gap-2 py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 text-white font-semibold rounded-xl hover:-translate-y-0.5 transition-all duration-300 shadow-md shadow-blue-500/20 cursor-pointer text-sm"
-              >
-                {status === 'sending' ? (
-                  <span>Sending Message...</span>
-                ) : (
-                  <>
-                    <span>Send Message</span>
-                    <Send size={16} />
-                  </>
-                )}
-              </button>
-
-              {/* Status Alert with a11y Live Region & One-Click Fallback */}
-              {statusMessage && (
-                <motion.div
-                  role="alert"
-                  aria-live="polite"
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`p-4 rounded-xl text-xs font-semibold leading-relaxed border space-y-2.5 ${
-                    status === 'success'
-                      ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300'
-                      : 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800 text-red-800 dark:text-red-300'
-                  }`}
+                {/* Transmit Button */}
+                <button
+                  type="submit"
+                  disabled={status === 'sending'}
+                  className="cyber-bracket cyber-button-sweep w-full inline-flex items-center justify-center gap-2 py-3.5 bg-[#00FF9C] hover:bg-[#00FF9C]/90 text-black font-extrabold font-mono rounded text-xs tracking-wider uppercase shadow-[0_0_20px_rgba(0,255,156,0.3)] transition-all cursor-pointer disabled:opacity-50"
                 >
-                  <p>{statusMessage}</p>
-                  
-                  {status === 'error' && (
-                    <div className="pt-2 flex flex-wrap gap-2">
-                      <a
-                        href={directMailtoLink}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
-                      >
-                        <span>Open in Email App with Message</span>
-                        <ExternalLink size={13} />
-                      </a>
-                      <button
-                        type="button"
-                        onClick={handleCopyEmail}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-bold hover:bg-slate-100 transition-colors cursor-pointer"
-                      >
-                        {copied ? (
-                          <>
-                            <Check size={13} className="text-emerald-500" />
-                            <span>Email Copied!</span>
-                          </>
-                        ) : (
-                          <>
-                            <Copy size={13} />
-                            <span>Copy Manu&apos;s Email</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
+                  {status === 'sending' ? (
+                    <span className="animate-pulse">&gt;&gt; TRANSMITTING DATA PACKETS...</span>
+                  ) : (
+                    <>
+                      <span>[ TRANSMIT PACKET ]</span>
+                      <Send size={14} />
+                    </>
                   )}
-                </motion.div>
-              )}
-            </form>
+                </button>
+
+                {/* Status Alert with Animation */}
+                <AnimatePresence>
+                  {statusMessage && (
+                    <motion.div
+                      role="alert"
+                      aria-live="polite"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 8 }}
+                      className={`p-4 rounded text-xs font-mono leading-relaxed border space-y-2.5 ${
+                        status === 'success'
+                          ? 'bg-[#00FF9C]/10 border-[#00FF9C] text-[#00FF9C] shadow-[0_0_15px_rgba(0,255,156,0.2)]'
+                          : 'bg-[#FF2BD6]/10 border-[#FF2BD6] text-[#FF2BD6]'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 font-bold">
+                        {status === 'success' ? (
+                          <Check size={14} className="text-[#00FF9C]" />
+                        ) : (
+                          <AlertCircle size={14} className="text-[#FF2BD6]" />
+                        )}
+                        <span>{statusMessage}</span>
+                      </div>
+
+                      {status === 'error' && (
+                        <div className="pt-2 flex flex-wrap gap-2">
+                          <a
+                            href={directMailtoLink}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#00D9FF] hover:bg-[#00D9FF]/90 text-black rounded text-[11px] font-bold transition-colors cursor-pointer"
+                          >
+                            <span>Open Mail Client</span>
+                            <ExternalLink size={12} />
+                          </a>
+                          <button
+                            type="button"
+                            onClick={handleCopyEmail}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#05060A] border border-[#1B2433] hover:border-[#00FF9C] text-[#D6E2F0] rounded text-[11px] font-bold transition-colors cursor-pointer"
+                          >
+                            {copied ? (
+                              <>
+                                <Check size={12} className="text-[#00FF9C]" />
+                                <span className="text-[#00FF9C]">Copied!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy size={12} />
+                                <span>Copy Email</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </form>
+            </div>
           </motion.div>
 
-          {/* Quick Info Column */}
+          {/* Direct Comms Links (5 cols) */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true, margin: '-80px' }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="lg:col-span-5 space-y-6"
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="lg:col-span-5 space-y-4"
           >
-            {/* Email Contact Card */}
+            {/* Direct Email Card */}
             <a
               href={`mailto:${personalInfo.email}`}
-              className="block glass-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-premium-hover hover:border-blue-300 dark:hover:border-blue-500 hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-slate-900"
+              className="cyber-bracket cyber-card block p-5 rounded-lg border border-[#1B2433] hover:border-[#00FF9C] bg-[#0B0F17] transition-all group"
             >
               <div className="flex gap-4 items-center">
-                <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/40 border border-blue-100 dark:border-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
-                  <Mail size={22} />
+                <div className="w-10 h-10 rounded bg-[#05060A] border border-[#00FF9C]/40 flex items-center justify-center text-[#00FF9C] shrink-0 group-hover:shadow-[0_0_12px_rgba(0,255,156,0.3)] transition-shadow">
+                  <Mail size={18} />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Direct Email</h4>
-                  <p className="text-slate-800 dark:text-slate-200 font-extrabold text-sm sm:text-base break-all mt-0.5">
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-[#6B7A90]">
+                    // DIRECT EMAIL UPLINK
+                  </h4>
+                  <p className="text-[#D6E2F0] font-bold text-xs sm:text-sm break-all mt-0.5 group-hover:text-[#00FF9C] transition-colors">
                     {personalInfo.email}
                   </p>
                 </div>
@@ -258,16 +304,18 @@ const Contact = () => {
               href={socialLinks.linkedin}
               target="_blank"
               rel="noreferrer"
-              className="block glass-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-premium-hover hover:border-blue-300 dark:hover:border-blue-500 hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-slate-900"
+              className="cyber-bracket cyber-card block p-5 rounded-lg border border-[#1B2433] hover:border-[#00D9FF] bg-[#0B0F17] transition-all group"
             >
               <div className="flex gap-4 items-center">
-                <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/40 border border-blue-100 dark:border-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
-                  <Linkedin size={22} />
+                <div className="w-10 h-10 rounded bg-[#05060A] border border-[#00D9FF]/40 flex items-center justify-center text-[#00D9FF] shrink-0 group-hover:shadow-[0_0_12px_rgba(0,217,255,0.3)] transition-shadow">
+                  <Linkedin size={18} />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">LinkedIn</h4>
-                  <p className="text-slate-800 dark:text-slate-200 font-extrabold text-sm sm:text-base mt-0.5">
-                    Connect Professionally
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-[#6B7A90]">
+                    // LINKEDIN NETWORK
+                  </h4>
+                  <p className="text-[#D6E2F0] font-bold text-xs sm:text-sm mt-0.5 group-hover:text-[#00D9FF] transition-colors">
+                    Connect on LinkedIn &rarr;
                   </p>
                 </div>
               </div>
@@ -278,22 +326,23 @@ const Contact = () => {
               href={socialLinks.github}
               target="_blank"
               rel="noreferrer"
-              className="block glass-card p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-premium-hover hover:border-blue-300 dark:hover:border-blue-500 hover:-translate-y-0.5 transition-all duration-300 bg-white dark:bg-slate-900"
+              className="cyber-bracket cyber-card block p-5 rounded-lg border border-[#1B2433] hover:border-[#FF2BD6] bg-[#0B0F17] transition-all group"
             >
               <div className="flex gap-4 items-center">
-                <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/40 border border-blue-100 dark:border-blue-800 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
-                  <Github size={22} />
+                <div className="w-10 h-10 rounded bg-[#05060A] border border-[#FF2BD6]/40 flex items-center justify-center text-[#FF2BD6] shrink-0 group-hover:shadow-[0_0_12px_rgba(255,43,214,0.3)] transition-shadow">
+                  <Github size={18} />
                 </div>
                 <div>
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">GitHub Profile</h4>
-                  <p className="text-slate-800 dark:text-slate-200 font-extrabold text-sm sm:text-base mt-0.5">
-                    Explore Code Repositories
+                  <h4 className="text-[10px] font-bold uppercase tracking-wider text-[#6B7A90]">
+                    // GITHUB SOURCE HUB
+                  </h4>
+                  <p className="text-[#D6E2F0] font-bold text-xs sm:text-sm mt-0.5 group-hover:text-[#FF2BD6] transition-colors">
+                    Review Code Repositories &rarr;
                   </p>
                 </div>
               </div>
             </a>
           </motion.div>
-
         </div>
       </div>
     </section>

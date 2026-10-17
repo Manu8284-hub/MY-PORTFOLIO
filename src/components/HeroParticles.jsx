@@ -57,9 +57,9 @@ const HeroParticles = () => {
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      const isDarkMode = document.documentElement.classList.contains('dark');
-      const particleColor = isDarkMode ? 'rgba(96, 165, 250, 0.4)' : 'rgba(37, 99, 235, 0.35)';
-      const lineColor = isDarkMode ? 'rgba(96, 165, 250, 0.08)' : 'rgba(37, 99, 235, 0.06)';
+      const isDarkMode = document.documentElement.classList.contains('dark') || true;
+      const particleColor = isDarkMode ? 'rgba(0, 255, 156, 0.45)' : 'rgba(0, 143, 82, 0.35)';
+      const lineColor = isDarkMode ? 'rgba(0, 217, 255, 0.12)' : 'rgba(0, 119, 153, 0.08)';
 
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];

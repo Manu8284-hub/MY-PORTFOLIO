@@ -1,18 +1,17 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { GitCommit, Code2, RefreshCw, Radio, ExternalLink } from 'lucide-react';
+import { GitCommit, Code2, RefreshCw, ExternalLink } from 'lucide-react';
 import { socialLinks } from '../data/portfolioData';
 
 const FALLBACK_NOW_DATA = {
   github: {
-    latestRepo: "Manu8284-hub/MY-PORTFOLIO",
-    commitMessage: "feat: terminal CLI mode, recruiter AI chat & live metrics",
-    commitDate: "Recent commit",
-    status: "Active"
+    latestRepo: 'Manu8284-hub/MY-PORTFOLIO',
+    commitMessage: 'feat: cyberpunk hacker HUD restyle, physics skills & terminal mode',
+    commitDate: 'Recent commit',
+    status: 'Active'
   },
   leetcode: {
     totalSolved: 305,
-    ranking: "Top 12%",
+    ranking: 'Top 12%',
     easy: 140,
     medium: 145,
     hard: 20
@@ -36,8 +35,7 @@ const NowWidget = () => {
       } else {
         setIsLive(false);
       }
-    } catch (err) {
-      console.warn('Using fallback for Now widget:', err);
+    } catch {
       setIsLive(false);
     } finally {
       setLoading(false);
@@ -49,116 +47,113 @@ const NowWidget = () => {
   }, []);
 
   return (
-    <div className="glass-card rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800 shadow-sm text-left relative overflow-hidden">
-      {/* Background radial accent */}
-      <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/5 rounded-full blur-2xl pointer-events-none" />
-
+    <div className="cyber-bracket cyber-card rounded-lg p-5 sm:p-6 bg-[#0B0F17] border border-[#1B2433] hover:border-[#00FF9C]/40 text-left relative overflow-hidden font-mono shadow-[0_0_20px_rgba(0,0,0,0.6)]">
       {/* Widget Header */}
-      <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 dark:border-slate-800">
+      <div className="flex items-center justify-between mb-5 pb-3 border-b border-[#1B2433]">
         <div className="flex items-center gap-2.5">
-          <span className="relative flex h-2.5 w-2.5">
+          <span className="relative flex h-2 w-2">
             <span
               className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-                isLive ? 'bg-emerald-400' : 'bg-amber-400'
+                isLive ? 'bg-[#00FF9C]' : 'bg-[#00D9FF]'
               }`}
             />
             <span
-              className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
-                isLive ? 'bg-emerald-500' : 'bg-amber-500'
+              className={`relative inline-flex rounded-full h-2 w-2 ${
+                isLive ? 'bg-[#00FF9C]' : 'bg-[#00D9FF]'
               }`}
             />
           </span>
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
-            Live &ldquo;Now&rdquo; Activity
+          <span className="text-xs font-bold uppercase tracking-wider text-[#D6E2F0]">
+            // LIVE HUD TELEMETRY
           </span>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 font-mono text-slate-500">
-            {isLive ? 'Live Sync' : 'Cached Sync'}
+          <span className="text-[10px] px-2 py-0.5 rounded bg-[#05060A] text-[#00FF9C] border border-[#1B2433]">
+            {isLive ? 'LIVE_STREAM' : 'CACHED_PIPE'}
           </span>
         </div>
 
         <button
           onClick={fetchNowData}
           disabled={loading}
-          className="p-1.5 rounded-xl text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all cursor-pointer"
-          title="Refresh stats"
-          aria-label="Refresh live stats"
+          className="p-1.5 rounded bg-[#05060A] text-[#6B7A90] hover:text-[#00FF9C] border border-[#1B2433] hover:border-[#00FF9C] transition-all cursor-pointer"
+          title="Refresh HUD telemetry"
+          aria-label="Refresh HUD telemetry"
         >
-          <RefreshCw size={14} className={loading ? 'animate-spin text-blue-600' : ''} />
+          <RefreshCw size={12} className={loading ? 'animate-spin text-[#00FF9C]' : ''} />
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-        {/* GitHub Latest Commit Section */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-            <span className="font-bold uppercase tracking-wider flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
-              <GitCommit size={15} className="text-blue-600 dark:text-blue-400" />
-              Latest GitHub Activity
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
+        {/* GitHub Activity Section */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs text-[#6B7A90]">
+            <span className="font-bold flex items-center gap-1.5 text-[#00D9FF]">
+              <GitCommit size={14} className="text-[#00D9FF]" />
+              &gt; GIT_COMMIT_HEAD
             </span>
             <a
               href={socialLinks.github}
               target="_blank"
               rel="noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-0.5"
+              className="text-[#00FF9C] hover:underline flex items-center gap-0.5 text-[11px]"
             >
-              <span>GitHub</span>
-              <ExternalLink size={10} />
+              <span>HUB</span>
+              <ExternalLink size={9} />
             </a>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/70">
-            <p className="text-xs font-mono font-bold text-slate-900 dark:text-white truncate">
-              {data.github?.latestRepo || "Manu8284-hub/MY-PORTFOLIO"}
+          <div className="p-3 rounded bg-[#05060A] border border-[#1B2433]">
+            <p className="text-xs font-mono font-bold text-[#D6E2F0] truncate">
+              {data.github?.latestRepo || 'Manu8284-hub/MY-PORTFOLIO'}
             </p>
-            <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2 italic">
-              &ldquo;{data.github?.commitMessage || "feat: latest updates"}&rdquo;
+            <p className="text-xs text-[#6B7A90] mt-1 line-clamp-1">
+              &quot;{data.github?.commitMessage || 'feat: latest system upgrade'}&quot;
             </p>
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-2 font-mono">
-              {data.github?.commitDate || "Recent"}
+            <p className="text-[10px] text-[#00FF9C] mt-1.5">
+              // {data.github?.commitDate || 'Recent'}
             </p>
           </div>
         </div>
 
         {/* LeetCode Live Progress Section */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-            <span className="font-bold uppercase tracking-wider flex items-center gap-1.5 text-slate-700 dark:text-slate-300">
-              <Code2 size={15} className="text-amber-500" />
-              LeetCode Performance
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs text-[#6B7A90]">
+            <span className="font-bold flex items-center gap-1.5 text-[#FF2BD6]">
+              <Code2 size={14} className="text-[#FF2BD6]" />
+              &gt; ALGO_METRICS
             </span>
             <a
               href={socialLinks.leetcode}
               target="_blank"
               rel="noreferrer"
-              className="text-amber-500 hover:underline flex items-center gap-0.5"
+              className="text-[#FF2BD6] hover:underline flex items-center gap-0.5 text-[11px]"
             >
-              <span>Profile</span>
-              <ExternalLink size={10} />
+              <span>LEETCODE</span>
+              <ExternalLink size={9} />
             </a>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/70 flex items-center justify-between">
+          <div className="p-3 rounded bg-[#05060A] border border-[#1B2433] flex items-center justify-between">
             <div>
-              <p className="text-2xl font-black text-slate-900 dark:text-white">
-                {data.leetcode?.totalSolved || "300+"}
+              <p className="text-xl font-black text-[#D6E2F0]">
+                {data.leetcode?.totalSolved || '300+'}
               </p>
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mt-0.5">
-                Problems Solved
+              <p className="text-[9px] uppercase font-bold text-[#6B7A90]">
+                SOLVED // {data.leetcode?.ranking || 'Top 12%'}
               </p>
             </div>
 
-            <div className="flex gap-2 text-center text-[10px] font-bold font-mono">
-              <div className="px-2 py-1 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 rounded-lg">
+            <div className="flex gap-1.5 text-center text-[10px] font-bold font-mono">
+              <div className="px-2 py-1 bg-[#0B0F17] border border-[#00FF9C]/40 text-[#00FF9C] rounded">
                 <p>{data.leetcode?.easy || 140}</p>
-                <p className="text-[8px] text-slate-400">Easy</p>
+                <p className="text-[7px] text-[#6B7A90]">EASY</p>
               </div>
-              <div className="px-2 py-1 bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 rounded-lg">
+              <div className="px-2 py-1 bg-[#0B0F17] border border-amber-500/40 text-amber-400 rounded">
                 <p>{data.leetcode?.medium || 145}</p>
-                <p className="text-[8px] text-slate-400">Med</p>
+                <p className="text-[7px] text-[#6B7A90]">MED</p>
               </div>
-              <div className="px-2 py-1 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 rounded-lg">
+              <div className="px-2 py-1 bg-[#0B0F17] border border-[#FF2BD6]/40 text-[#FF2BD6] rounded">
                 <p>{data.leetcode?.hard || 20}</p>
-                <p className="text-[8px] text-slate-400">Hard</p>
+                <p className="text-[7px] text-[#6B7A90]">HARD</p>
               </div>
             </div>
           </div>

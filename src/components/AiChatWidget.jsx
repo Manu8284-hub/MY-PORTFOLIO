@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, X, Send, Sparkles, User, RefreshCw, AlertCircle } from 'lucide-react';
+import { Bot, X, Send, Sparkles, User, RefreshCw, AlertCircle, Terminal } from 'lucide-react';
 import { aiSuggestedQuestions, personalInfo } from '../data/portfolioData';
 
 const AiChatWidget = () => {
@@ -9,7 +9,7 @@ const AiChatWidget = () => {
     {
       id: 'welcome',
       role: 'assistant',
-      text: `Hello! I am Manu's AI Assistant. Ask me anything about Manu's MERN stack experience, projects like FitBot AI or Campus Connect Hub, or his internship availability!`
+      text: ">> NEURAL_AI_UPLINK ESTABLISHED. I am Manu's interactive AI assistant. Inquire about his MERN stack architectures, projects (FitBot AI, Campus Connect Hub), or engineering roles."
     }
   ]);
   const [input, setInput] = useState('');
@@ -33,14 +33,13 @@ const AiChatWidget = () => {
     if (!query || isStreaming) return;
 
     if (query.length > 400) {
-      setErrorMsg('Questions must be under 400 characters.');
+      setErrorMsg('Payload exceeds maximum buffer limit (400 chars).');
       return;
     }
 
     setErrorMsg('');
     setInput('');
 
-    // Append user message
     const userMsgId = Date.now().toString();
     const assistantMsgId = (Date.now() + 1).toString();
 
@@ -61,7 +60,7 @@ const AiChatWidget = () => {
 
       if (!response.ok) {
         const errorJson = await response.json().catch(() => ({}));
-        throw new Error(errorJson.error || 'Failed to get a response.');
+        throw new Error(errorJson.error || 'Failed to establish neural response stream.');
       }
 
       const reader = response.body.getReader();
@@ -94,7 +93,7 @@ const AiChatWidget = () => {
                 throw new Error(parsed.error);
               }
             } catch {
-              // ignore non-json
+              // ignore
             }
           }
         }
@@ -108,7 +107,7 @@ const AiChatWidget = () => {
                 ...msg,
                 text:
                   err.message ||
-                  'Sorry, I could not complete that response. Please feel free to email Manu directly at ' +
+                  'Transmission error. Please email Manu directly at ' +
                     personalInfo.email
               }
             : msg
@@ -122,20 +121,20 @@ const AiChatWidget = () => {
   return (
     <>
       {/* Floating Chat Trigger Button */}
-      <div className="fixed bottom-6 right-6 z-40">
+      <div className="fixed bottom-6 right-6 z-40 font-mono">
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="relative flex items-center gap-2.5 px-4 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-2xl shadow-blue-500/30 border border-blue-400/30 cursor-pointer"
+          className="cyber-bracket relative flex items-center gap-2 px-4 py-3 bg-[#0B0F17] hover:bg-[#111723] text-[#00FF9C] rounded border border-[#00FF9C] shadow-[0_0_20px_rgba(0,255,156,0.3)] cursor-pointer select-none"
           aria-label="Ask Manu's AI Assistant"
         >
-          <span className="relative flex h-2.5 w-2.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00FF9C] opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00FF9C]" />
           </span>
-          <Bot size={18} />
-          <span className="text-xs font-bold tracking-wide hidden sm:inline">Ask Manu&apos;s AI</span>
+          <Bot size={17} className="text-[#00FF9C]" />
+          <span className="text-xs font-bold tracking-wider hidden sm:inline">&gt; AI_UPLINK</span>
         </motion.button>
       </div>
 
@@ -147,31 +146,31 @@ const AiChatWidget = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-20 right-4 sm:right-6 z-50 w-[92vw] sm:w-[400px] h-[540px] max-h-[82vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl flex flex-col overflow-hidden text-left"
+            className="cyber-bracket fixed bottom-20 right-4 sm:right-6 z-50 w-[92vw] sm:w-[420px] h-[550px] max-h-[82vh] bg-[#0B0F17] border border-[#00FF9C]/60 rounded-lg shadow-[0_0_35px_rgba(0,255,156,0.25)] flex flex-col overflow-hidden text-left font-mono select-none"
           >
             {/* Header */}
-            <div className="p-4 bg-slate-50 dark:bg-slate-800/80 border-b border-slate-200/80 dark:border-slate-800 flex items-center justify-between">
+            <div className="p-3.5 bg-[#05060A] border-b border-[#1B2433] flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center text-white">
-                  <Bot size={18} />
+                <div className="w-7 h-7 rounded bg-[#0B0F17] border border-[#00FF9C] flex items-center justify-center text-[#00FF9C]">
+                  <Bot size={15} />
                 </div>
                 <div>
-                  <h3 className="text-xs font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-                    Manu&apos;s AI Assistant
-                    <Sparkles size={12} className="text-amber-400" />
+                  <h3 className="text-xs font-bold text-[#D6E2F0] flex items-center gap-1.5">
+                    MANU_AI // COPILOT
+                    <Sparkles size={11} className="text-[#00FF9C]" />
                   </h3>
-                  <p className="text-[10px] text-slate-400 font-mono">
-                    Trained on Manu&apos;s resume &amp; projects
+                  <p className="text-[9px] text-[#6B7A90]">
+                    TRAINED ON RESUME &amp; CODEBASE
                   </p>
                 </div>
               </div>
 
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1.5 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors cursor-pointer"
+                className="p-1 rounded bg-[#05060A] hover:bg-[#111723] text-[#6B7A90] hover:text-[#00FF9C] border border-[#1B2433] transition-colors cursor-pointer"
                 aria-label="Close Chat"
               >
-                <X size={16} />
+                <X size={15} />
               </button>
             </div>
 
@@ -180,31 +179,31 @@ const AiChatWidget = () => {
               {messages.map((msg) => (
                 <div
                   key={msg.id}
-                  className={`flex gap-2.5 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   {msg.role === 'assistant' && (
-                    <div className="w-6 h-6 rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 flex items-center justify-center shrink-0 mt-0.5">
-                      <Bot size={14} />
+                    <div className="w-5 h-5 rounded bg-[#05060A] border border-[#00FF9C]/40 text-[#00FF9C] flex items-center justify-center shrink-0 mt-0.5">
+                      <Terminal size={11} />
                     </div>
                   )}
 
                   <div
-                    className={`max-w-[82%] p-3 rounded-2xl whitespace-pre-wrap leading-relaxed ${
+                    className={`max-w-[84%] p-3 rounded text-xs whitespace-pre-wrap leading-relaxed ${
                       msg.role === 'user'
-                        ? 'bg-blue-600 text-white rounded-br-xs font-medium'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-bl-xs'
+                        ? 'bg-[#00FF9C] text-black font-bold'
+                        : 'bg-[#05060A] border border-[#1B2433] text-[#D6E2F0]'
                     }`}
                   >
                     {msg.text || (
-                      <span className="inline-flex items-center gap-1.5 text-slate-400 italic">
-                        <RefreshCw size={11} className="animate-spin" /> Thinking...
+                      <span className="inline-flex items-center gap-1.5 text-[#6B7A90] italic">
+                        <RefreshCw size={10} className="animate-spin text-[#00FF9C]" /> Computing response...
                       </span>
                     )}
                   </div>
 
                   {msg.role === 'user' && (
-                    <div className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center shrink-0 mt-0.5">
-                      <User size={13} />
+                    <div className="w-5 h-5 rounded bg-[#05060A] border border-[#00D9FF]/40 text-[#00D9FF] flex items-center justify-center shrink-0 mt-0.5">
+                      <User size={11} />
                     </div>
                   )}
                 </div>
@@ -212,21 +211,21 @@ const AiChatWidget = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Suggested Question Chips (3 chips from portfolioData) */}
-            <div className="px-3.5 py-2 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/40">
-              <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-1.5">
-                Suggested Questions
+            {/* Suggested Question Chips */}
+            <div className="px-3.5 py-2 border-t border-[#1B2433] bg-[#05060A]">
+              <p className="text-[9px] font-bold uppercase tracking-wider text-[#6B7A90] mb-1.5">
+                // SUGGESTED PROMPTS
               </p>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-1">
                 {aiSuggestedQuestions.map((q, idx) => (
                   <button
                     key={idx}
                     type="button"
                     disabled={isStreaming}
                     onClick={() => handleSendMessage(q)}
-                    className="text-[10px] font-medium px-2.5 py-1 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-left cursor-pointer"
+                    className="text-[9px] px-2 py-1 rounded bg-[#0B0F17] border border-[#1B2433] hover:border-[#00FF9C] text-[#6B7A90] hover:text-[#00FF9C] transition-colors text-left cursor-pointer"
                   >
-                    {q}
+                    &gt; {q}
                   </button>
                 ))}
               </div>
@@ -234,8 +233,8 @@ const AiChatWidget = () => {
 
             {/* Error Message */}
             {errorMsg && (
-              <div className="px-4 py-2 bg-rose-50 dark:bg-rose-950/40 border-t border-rose-200 dark:border-rose-800 text-rose-600 dark:text-rose-300 text-[11px] flex items-center gap-1.5">
-                <AlertCircle size={13} />
+              <div className="px-3 py-1.5 bg-[#FF2BD6]/10 border-t border-[#FF2BD6] text-[#FF2BD6] text-[10px] flex items-center gap-1.5">
+                <AlertCircle size={12} />
                 <span>{errorMsg}</span>
               </div>
             )}
@@ -246,25 +245,25 @@ const AiChatWidget = () => {
                 e.preventDefault();
                 handleSendMessage();
               }}
-              className="p-3 border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center gap-2"
+              className="p-3 border-t border-[#1B2433] bg-[#05060A] flex items-center gap-2"
             >
               <input
                 ref={inputRef}
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask about skills, projects, internships..."
+                placeholder="Transmit query..."
                 maxLength={400}
                 disabled={isStreaming}
-                className="flex-1 px-3 py-2 text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-blue-600 font-medium"
+                className="flex-1 px-3 py-2 text-xs bg-[#0B0F17] border border-[#1B2433] focus:border-[#00FF9C] rounded text-[#D6E2F0] placeholder-[#6B7A90] focus:outline-none font-mono"
               />
               <button
                 type="submit"
                 disabled={!input.trim() || isStreaming}
-                className="p-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 text-white rounded-xl transition-colors cursor-pointer"
+                className="p-2 bg-[#00FF9C] hover:bg-[#00FF9C]/90 disabled:opacity-40 text-black rounded font-bold transition-all cursor-pointer"
                 aria-label="Send Message"
               >
-                <Send size={14} />
+                <Send size={13} />
               </button>
             </form>
           </motion.div>

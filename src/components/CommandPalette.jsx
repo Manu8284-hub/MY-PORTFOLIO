@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Search, Terminal, Moon, Sun, Download, ExternalLink, Hash, ArrowRight } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { personalInfo, socialLinks } from '../data/portfolioData';
@@ -13,57 +13,57 @@ const CommandPalette = ({ isOpen, onClose, onOpenTerminal }) => {
   const commands = [
     {
       id: 'section-about',
-      label: 'Jump to About Me',
-      category: 'Navigation',
+      label: 'Jump to > ABOUT',
+      category: 'NAV',
       icon: Hash,
       action: () => scrollToSection('about')
     },
     {
       id: 'section-skills',
-      label: 'Jump to Skills & Toolkit',
-      category: 'Navigation',
+      label: 'Jump to > SKILLS',
+      category: 'NAV',
       icon: Hash,
       action: () => scrollToSection('skills')
     },
     {
       id: 'section-projects',
-      label: 'Jump to Projects',
-      category: 'Navigation',
+      label: 'Jump to > PROJECTS',
+      category: 'NAV',
       icon: Hash,
       action: () => scrollToSection('projects')
     },
     {
       id: 'section-education',
-      label: 'Jump to Education',
-      category: 'Navigation',
+      label: 'Jump to > EDUCATION',
+      category: 'NAV',
       icon: Hash,
       action: () => scrollToSection('education')
     },
     {
       id: 'section-profiles',
-      label: 'Jump to Coding Profiles',
-      category: 'Navigation',
+      label: 'Jump to > PROFILES',
+      category: 'NAV',
       icon: Hash,
       action: () => scrollToSection('coding-profiles')
     },
     {
       id: 'section-guestbook',
-      label: 'Jump to Guestbook',
-      category: 'Navigation',
+      label: 'Jump to > GUESTBOOK',
+      category: 'NAV',
       icon: Hash,
       action: () => scrollToSection('guestbook')
     },
     {
       id: 'section-contact',
-      label: 'Jump to Contact Me',
-      category: 'Navigation',
+      label: 'Jump to > CONTACT',
+      category: 'NAV',
       icon: Hash,
       action: () => scrollToSection('contact')
     },
     {
       id: 'terminal',
-      label: 'Open Terminal CLI Mode',
-      category: 'Interactive',
+      label: 'Launch Terminal CLI (` key)',
+      category: 'INTERACTIVE',
       icon: Terminal,
       action: () => {
         onClose();
@@ -72,8 +72,8 @@ const CommandPalette = ({ isOpen, onClose, onOpenTerminal }) => {
     },
     {
       id: 'theme',
-      label: isDark ? 'Switch to Light Theme' : 'Switch to Dark Theme',
-      category: 'Appearance',
+      label: isDark ? 'Switch to Paper Terminal Light' : 'Switch to Cyberpunk Dark HUD',
+      category: 'THEME',
       icon: isDark ? Sun : Moon,
       action: () => {
         toggleTheme();
@@ -82,8 +82,8 @@ const CommandPalette = ({ isOpen, onClose, onOpenTerminal }) => {
     },
     {
       id: 'resume',
-      label: 'Download Resume (PDF)',
-      category: 'Actions',
+      label: 'Download Resume PDF',
+      category: 'ACTION',
       icon: Download,
       action: () => {
         window.open(personalInfo.resumeUrl, '_blank');
@@ -93,7 +93,7 @@ const CommandPalette = ({ isOpen, onClose, onOpenTerminal }) => {
     {
       id: 'github',
       label: 'Open GitHub Profile',
-      category: 'Links',
+      category: 'EXT_LINK',
       icon: ExternalLink,
       action: () => {
         window.open(socialLinks.github, '_blank');
@@ -103,7 +103,7 @@ const CommandPalette = ({ isOpen, onClose, onOpenTerminal }) => {
     {
       id: 'leetcode',
       label: 'Open LeetCode Profile',
-      category: 'Links',
+      category: 'EXT_LINK',
       icon: ExternalLink,
       action: () => {
         window.open(socialLinks.leetcode, '_blank');
@@ -113,7 +113,7 @@ const CommandPalette = ({ isOpen, onClose, onOpenTerminal }) => {
     {
       id: 'linkedin',
       label: 'Open LinkedIn Profile',
-      category: 'Links',
+      category: 'EXT_LINK',
       icon: ExternalLink,
       action: () => {
         window.open(socialLinks.linkedin, '_blank');
@@ -174,7 +174,7 @@ const CommandPalette = ({ isOpen, onClose, onOpenTerminal }) => {
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 bg-slate-950/70 backdrop-blur-md"
+      className="fixed inset-0 z-50 flex items-start justify-center pt-20 p-4 bg-black/80 backdrop-blur-md font-mono select-none"
       onClick={onClose}
     >
       <motion.div
@@ -183,11 +183,11 @@ const CommandPalette = ({ isOpen, onClose, onOpenTerminal }) => {
         exit={{ opacity: 0, scale: 0.95, y: -15 }}
         transition={{ duration: 0.18 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden text-left"
+        className="cyber-bracket relative w-full max-w-xl bg-[#0B0F17] border border-[#00FF9C]/60 rounded-lg shadow-[0_0_35px_rgba(0,255,156,0.2)] overflow-hidden text-left"
       >
         {/* Search Input Box */}
-        <div className="p-4 border-b border-slate-200/80 dark:border-slate-800 flex items-center gap-3">
-          <Search size={18} className="text-slate-400 shrink-0" />
+        <div className="p-4 bg-[#05060A] border-b border-[#1B2433] flex items-center gap-3">
+          <Search size={16} className="text-[#00FF9C] shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -197,10 +197,10 @@ const CommandPalette = ({ isOpen, onClose, onOpenTerminal }) => {
               setSelectedIndex(0);
             }}
             onKeyDown={handleKeyDown}
-            placeholder="Type a command or jump to section..."
-            className="flex-1 bg-transparent border-none outline-none text-slate-900 dark:text-white text-sm font-medium placeholder-slate-400"
+            placeholder="Type command or search HUD..."
+            className="flex-1 bg-transparent border-none outline-none text-[#D6E2F0] font-mono text-xs sm:text-sm placeholder-[#6B7A90]"
           />
-          <kbd className="hidden sm:inline-block px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-[10px] font-mono text-slate-500 border border-slate-200 dark:border-slate-700">
+          <kbd className="hidden sm:inline-block px-2 py-0.5 rounded bg-[#111723] text-[10px] font-mono text-[#6B7A90] border border-[#1B2433]">
             ESC
           </kbd>
         </div>
@@ -208,7 +208,7 @@ const CommandPalette = ({ isOpen, onClose, onOpenTerminal }) => {
         {/* Commands List */}
         <div className="max-h-80 overflow-y-auto p-2 space-y-1">
           {filteredCommands.length === 0 ? (
-            <p className="p-4 text-center text-xs text-slate-400">No matching commands found.</p>
+            <p className="p-4 text-center text-xs text-[#6B7A90]">No matching command directives found.</p>
           ) : (
             filteredCommands.map((cmd, idx) => {
               const Icon = cmd.icon;
@@ -218,27 +218,27 @@ const CommandPalette = ({ isOpen, onClose, onOpenTerminal }) => {
                   key={cmd.id}
                   onClick={cmd.action}
                   onMouseEnter={() => setSelectedIndex(idx)}
-                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-2xl cursor-pointer transition-colors text-xs font-semibold ${
+                  className={`flex items-center justify-between px-3.5 py-2.5 rounded cursor-pointer transition-colors text-xs font-mono ${
                     isSelected
-                      ? 'bg-blue-600 text-white'
-                      : 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      ? 'bg-[#00FF9C] text-black font-extrabold shadow-[0_0_12px_rgba(0,255,156,0.3)]'
+                      : 'text-[#D6E2F0] hover:bg-[#111723]'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <Icon size={15} className={isSelected ? 'text-white' : 'text-slate-400'} />
+                    <Icon size={14} className={isSelected ? 'text-black' : 'text-[#00D9FF]'} />
                     <span>{cmd.label}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span
-                      className={`text-[10px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-md ${
+                      className={`text-[9px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded border ${
                         isSelected
-                          ? 'bg-white/20 text-white'
-                          : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+                          ? 'border-black text-black'
+                          : 'border-[#1B2433] text-[#6B7A90]'
                       }`}
                     >
                       {cmd.category}
                     </span>
-                    {isSelected && <ArrowRight size={13} className="text-white" />}
+                    {isSelected && <ArrowRight size={13} className="text-black" />}
                   </div>
                 </div>
               );
@@ -247,10 +247,10 @@ const CommandPalette = ({ isOpen, onClose, onOpenTerminal }) => {
         </div>
 
         {/* Footer shortcuts helper */}
-        <div className="p-3 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
-          <span>Navigate: &uarr; &darr;</span>
-          <span>Select: Enter</span>
-          <span>Close: Esc</span>
+        <div className="p-3 bg-[#05060A] border-t border-[#1B2433] flex items-center justify-between text-[10px] text-[#6B7A90]">
+          <span>NAVIGATE: &uarr; &darr;</span>
+          <span>EXECUTE: ENTER</span>
+          <span>EXIT: ESC</span>
         </div>
       </motion.div>
     </div>

@@ -3,11 +3,11 @@ import { motion } from 'framer-motion';
 import { X, Terminal as TerminalIcon, CornerDownLeft, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useTheme } from '../context/ThemeContext';
-import { personalInfo, projectsData, skillCategories, socialLinks, terminalCommandsHelp } from '../data/portfolioData';
+import { personalInfo, projectsData, skillCategories, socialLinks } from '../data/portfolioData';
 
 const INITIAL_GREETING = [
-  { text: "Antigravity OS [Version 2.0.26]", type: "system" },
-  { text: "Logged in as guest@manu-portfolio. Type 'help' to see available commands.", type: "system" }
+  { text: '>> MANU_OS [Cyberpunk Terminal CLI v4.2.0]', type: 'system' },
+  { text: '>> Logged in as guest@manu-terminal. Type "help" to review available operational commands.', type: 'system' }
 ];
 
 const TerminalModal = ({ isOpen, onClose }) => {
@@ -42,29 +42,28 @@ const TerminalModal = ({ isOpen, onClose }) => {
     setCommandHistory((prev) => [...prev, rawCmd]);
     setHistoryIndex(-1);
 
-    const newHistory = [...history, { text: `guest@portfolio:~$ ${rawCmd}`, type: "command" }];
+    const newHistory = [...history, { text: `guest@terminal:~$ ${rawCmd}`, type: 'command' }];
 
     switch (cmd) {
       case 'help':
         newHistory.push({
-          type: "output",
-          text: `Available Commands:
-  • about     - Who is Manu Sharma?
-  • skills    - Technical toolkit & frameworks
-  • projects  - Featured engineering projects
-  • contact   - Email & social coordinates
-  • stats     - Coding metrics & LeetCode count
-  • theme     - Toggle dark/light appearance
-  • clear     - Clear terminal buffer
-  • sudo hire manu - Unlock top-tier engineering talent (Easter egg)`
+          type: 'output',
+          text: `AVAILABLE CYBER COMMANDS:
+  • about           - Who is Manu Sharma?
+  • skills          - Technical stack & capabilities
+  • projects        - Production systems & apps
+  • contact         - Direct transmission coordinates
+  • theme           - Toggle dark HUD / light paper terminal
+  • clear           - Flush terminal output buffer
+  • sudo hire manu  - [CLASSIFIED] Execute recruitment protocol`
         });
         break;
 
       case 'about':
         newHistory.push({
-          type: "output",
+          type: 'output',
           text: `${personalInfo.name} — ${personalInfo.title}
-Institution: ${personalInfo.institution} (Expected ${personalInfo.graduationYear})
+Institution: ${personalInfo.institution} (Graduation: ${personalInfo.graduationYear})
 Status: ${personalInfo.status}
 Bio: ${personalInfo.bioIntro}`
         });
@@ -72,42 +71,34 @@ Bio: ${personalInfo.bioIntro}`
 
       case 'skills':
         const skillsText = skillCategories
-          .map((cat) => `[${cat.title}]: ${cat.skills.map((s) => s.name).join(', ')}`)
+          .map((cat) => `// [${cat.title}]: ${cat.skills.map((s) => s.name).join(', ')}`)
           .join('\n');
-        newHistory.push({ type: "output", text: skillsText });
+        newHistory.push({ type: 'output', text: skillsText });
         break;
 
       case 'projects':
         const projText = projectsData
-          .map((p, idx) => `${idx + 1}. ${p.title} (${p.category}) -> ${p.githubUrl}`)
+          .map((p, idx) => `[${idx + 1}] ${p.title} (${p.category}) -> ${p.githubUrl || p.liveUrl}`)
           .join('\n');
-        newHistory.push({ type: "output", text: projText });
+        newHistory.push({ type: 'output', text: projText });
         break;
 
       case 'contact':
         newHistory.push({
-          type: "output",
-          text: `Email: ${personalInfo.email}
-GitHub: ${socialLinks.github}
+          type: 'output',
+          text: `// TRANSMISSION CHANNELS:
+Email:    ${personalInfo.email}
+GitHub:   ${socialLinks.github}
 LinkedIn: ${socialLinks.linkedin}
 LeetCode: ${socialLinks.leetcode}`
-        });
-        break;
-
-      case 'stats':
-        newHistory.push({
-          type: "output",
-          text: `LeetCode: 300+ Problems Solved (Top 12% Contest Rating)
-GitHub: 25+ Repositories (200+ contributions)
-Focus: High Performance MERN Stack Architectures`
         });
         break;
 
       case 'theme':
         toggleTheme();
         newHistory.push({
-          type: "output",
-          text: `Theme switched to: ${isDark ? 'Light' : 'Dark'} mode.`
+          type: 'output',
+          text: `// Theme protocol swapped: ${isDark ? 'Paper Terminal Light' : 'Dark Hacker HUD'}.`
         });
         break;
 
@@ -118,23 +109,23 @@ Focus: High Performance MERN Stack Architectures`
 
       case 'sudo hire manu':
         confetti({
-          particleCount: 120,
-          spread: 75,
+          particleCount: 150,
+          spread: 85,
           origin: { y: 0.6 }
         });
         newHistory.push({
-          type: "success",
-          text: `🎉 EXCELLENT DECISION!
-You are hiring Manu Sharma.
-Candidate status: Ready for full-stack impact.
-Next Step: Send interview offer to ${personalInfo.email}`
+          type: 'success',
+          text: `⚡ PROTOCOL EXECUTED: EXCELLENT DECISION!
+Manu Sharma has been added to your engineering squad.
+High performance MERN Stack capabilities unlocked.
+Direct transmission link: ${personalInfo.email}`
         });
         break;
 
       default:
         newHistory.push({
-          type: "error",
-          text: `command not found: "${rawCmd}". Type "help" to view valid commands.`
+          type: 'error',
+          text: `ERR_UNKNOWN_CMD: "${rawCmd}". Type "help" for command directory.`
         });
     }
 
@@ -173,39 +164,39 @@ Next Step: Send interview offer to ${personalInfo.email}`
     <div
       role="dialog"
       aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-md"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md font-mono select-none"
       onClick={onClose}
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.96, y: 15 }}
+        initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.96, y: 15 }}
+        exit={{ opacity: 0, scale: 0.95, y: 15 }}
         transition={{ duration: 0.2 }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-3xl h-[550px] max-h-[85vh] bg-[#0c1017] border border-slate-800 rounded-2xl shadow-2xl flex flex-col font-mono text-xs sm:text-sm overflow-hidden"
+        className="cyber-bracket relative w-full max-w-3xl h-[560px] max-h-[85vh] bg-[#0B0F17] border border-[#00FF9C] rounded-lg shadow-[0_0_40px_rgba(0,255,156,0.25)] flex flex-col text-xs sm:text-sm overflow-hidden"
       >
-        {/* Terminal Window Header Bar */}
-        <div className="bg-[#161b22] px-4 py-3 border-b border-slate-800 flex items-center justify-between select-none">
+        {/* Terminal Header Bar */}
+        <div className="bg-[#05060A] px-4 py-3 border-b border-[#1B2433] flex items-center justify-between select-none">
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="w-3 h-3 rounded-full bg-red-500 hover:opacity-80 transition-opacity cursor-pointer"
+              className="w-3 h-3 rounded-full bg-[#FF2BD6] hover:opacity-80 transition-opacity cursor-pointer shadow-[0_0_6px_#FF2BD6]"
               title="Close Terminal"
               aria-label="Close Terminal"
             />
-            <div className="w-3 h-3 rounded-full bg-amber-500 opacity-80" />
-            <div className="w-3 h-3 rounded-full bg-emerald-500 opacity-80" />
-            <span className="ml-3 text-xs text-slate-400 font-bold flex items-center gap-1.5">
-              <TerminalIcon size={13} className="text-blue-400" />
-              manu@portfolio: ~ (bash)
+            <div className="w-3 h-3 rounded-full bg-amber-400" />
+            <div className="w-3 h-3 rounded-full bg-[#00FF9C] shadow-[0_0_6px_#00FF9C]" />
+            <span className="ml-3 text-xs text-[#6B7A90] font-bold flex items-center gap-2">
+              <TerminalIcon size={14} className="text-[#00FF9C]" />
+              <span className="text-[#D6E2F0]">manu@terminal: ~ [BASH]</span>
             </span>
           </div>
 
-          <div className="flex items-center gap-2 text-[11px] text-slate-500">
-            <span>Press ESC or type &apos;clear&apos;</span>
+          <div className="flex items-center gap-3 text-[11px] text-[#6B7A90]">
+            <span className="hidden sm:inline">ESC or &apos;clear&apos;</span>
             <button
               onClick={onClose}
-              className="p-1 hover:text-slate-300 transition-colors"
+              className="p-1 hover:text-[#00FF9C] transition-colors cursor-pointer"
               aria-label="Close"
             >
               <X size={15} />
@@ -213,28 +204,31 @@ Next Step: Send interview offer to ${personalInfo.email}`
           </div>
         </div>
 
-        {/* Terminal Screen Body */}
+        {/* Terminal Output Area */}
         <div
-          className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-3 text-slate-200 text-left"
+          className="flex-1 p-5 sm:p-6 overflow-y-auto space-y-3 text-[#D6E2F0] text-left relative"
           onClick={() => inputRef.current?.focus()}
         >
+          {/* Subtle scanline inside terminal */}
+          <div className="absolute inset-0 cyber-scanlines opacity-15 pointer-events-none" />
+
           {history.map((item, idx) => (
-            <div key={idx} className="whitespace-pre-wrap leading-relaxed">
+            <div key={idx} className="whitespace-pre-wrap leading-relaxed relative z-10">
               {item.type === 'system' && (
-                <p className="text-slate-500">{item.text}</p>
+                <p className="text-[#6B7A90]">{item.text}</p>
               )}
               {item.type === 'command' && (
-                <p className="text-sky-400 font-bold">{item.text}</p>
+                <p className="text-[#00D9FF] font-bold">{item.text}</p>
               )}
               {item.type === 'output' && (
-                <p className="text-slate-300 font-normal">{item.text}</p>
+                <p className="text-[#D6E2F0]">{item.text}</p>
               )}
               {item.type === 'error' && (
-                <p className="text-rose-400 font-medium">{item.text}</p>
+                <p className="text-[#FF2BD6] font-semibold">{item.text}</p>
               )}
               {item.type === 'success' && (
-                <div className="p-3 my-2 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 font-bold flex items-start gap-2">
-                  <Sparkles size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+                <div className="p-3 my-2 rounded bg-[#00FF9C]/10 border border-[#00FF9C] text-[#00FF9C] font-bold flex items-start gap-2 shadow-[0_0_15px_rgba(0,255,156,0.25)]">
+                  <Sparkles size={16} className="text-[#00FF9C] shrink-0 mt-0.5" />
                   <span>{item.text}</span>
                 </div>
               )}
@@ -242,22 +236,22 @@ Next Step: Send interview offer to ${personalInfo.email}`
           ))}
 
           {/* Active Command Input Line */}
-          <div className="flex items-center gap-2 pt-1 text-slate-100">
-            <span className="text-emerald-400 font-bold">guest@portfolio:~$</span>
+          <div className="flex items-center gap-2 pt-2 text-[#D6E2F0] relative z-10">
+            <span className="text-[#00FF9C] font-bold">guest@terminal:~$</span>
             <input
               ref={inputRef}
               type="text"
               value={inputVal}
               onChange={(e) => setInputVal(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="flex-1 bg-transparent border-none outline-none text-slate-100 font-mono text-xs sm:text-sm caret-blue-400"
+              className="flex-1 bg-transparent border-none outline-none text-[#D6E2F0] font-mono text-xs sm:text-sm caret-[#00FF9C]"
               autoFocus
               spellCheck={false}
               autoComplete="off"
             />
             <button
               onClick={() => handleCommand(inputVal)}
-              className="p-1 text-slate-500 hover:text-slate-300 cursor-pointer"
+              className="p-1 text-[#6B7A90] hover:text-[#00FF9C] cursor-pointer"
               aria-label="Submit command"
             >
               <CornerDownLeft size={13} />
